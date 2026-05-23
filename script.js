@@ -207,6 +207,7 @@ function switchAuthTab(tab) {
         document.getElementById('modal-title-text').innerText = "Aceder à Plataforma";
         document.getElementById('modal-title-icon').innerText = "🔑";
         document.getElementById('modal-subtitle-text').innerText = "Bem-vindo(a) de volta à sua conta MoreLife.";
+        const modalRegisterCta = document.getElementById('modal-register-cta'); if (modalRegisterCta) modalRegisterCta.classList.add('hidden');
     } else {
         tabRegister.className = "flex-1 py-4 text-center font-semibold text-sm border-b-2 border-[#0B8C7F] text-[#0B8C7F]";
         tabLogin.className = "flex-1 py-4 text-center font-semibold text-sm text-slate-500 hover:text-slate-700 border-b-2 border-transparent";
@@ -215,6 +216,7 @@ function switchAuthTab(tab) {
         document.getElementById('modal-title-text').innerText = "Crie a sua Conta de Apoio";
         document.getElementById('modal-title-icon').innerText = "🩺";
         document.getElementById('modal-subtitle-text').innerText = "Preencha os dados abaixo para se ligar à nossa rede.";
+        const modalRegisterCta = document.getElementById('modal-register-cta'); if (modalRegisterCta) modalRegisterCta.classList.remove('hidden');
         // limpar mensagens de erro e estado do formulário
         ['reg-name','reg-email','reg-password','reg-terms'].forEach(id => clearFieldError(id));
         const pwdBar = document.getElementById('reg-password-strength'); if (pwdBar) { pwdBar.style.width = '0%'; }
