@@ -215,6 +215,9 @@ function switchAuthTab(tab) {
         document.getElementById('modal-title-text').innerText = "Crie a sua Conta de Apoio";
         document.getElementById('modal-title-icon').innerText = "🩺";
         document.getElementById('modal-subtitle-text').innerText = "Preencha os dados abaixo para se ligar à nossa rede.";
+        // limpar mensagens de erro e estado do formulário
+        ['reg-name','reg-email','reg-password','reg-terms'].forEach(id => clearFieldError(id));
+        const pwdBar = document.getElementById('reg-password-strength'); if (pwdBar) { pwdBar.style.width = '0%'; }
     }
 }
 
@@ -241,9 +244,103 @@ function toggleRegisterFormFields(role) {
     }
 }
 
+// ==========================
+// Validação do Formulário
+// ==========================
+function setFieldError(id, message) {
+    const el = document.getElementById(id + '-error');
+    if (el) {
+        el.innerText = message;
+        el.classList.remove('hidden');
+    }
+}
+
+function clearFieldError(id) {
+    const el = document.getElementById(id + '-error');
+    if (el) {
+        el.innerText = '';
+        el.classList.add('hidden');
+    }
+}
+
+function evaluatePasswordStrength(password) {
+    let score = 0;
+    if (!password) return 0;
+    if (password.length >= 8) score += 1;
+    if (/[A-Z]/.test(password)) score += 1;
+    if (/[0-9]/.test(password)) score += 1;
+    if (/[^A-Za-z0-9]/.test(password)) score += 1;
+    return score; // 0..4
+}
+
+function updatePasswordStrengthBar() {
+    const pwd = document.getElementById('reg-password');
+    const bar = document.getElementById('reg-password-strength');
+    if (!pwd || !bar) return;
+    const score = evaluatePasswordStrength(pwd.value);
+    const percent = (score / 4) * 100;
+    bar.style.width = percent + '%';
+    if (score <= 1) {
+        bar.className = 'h-2 w-0 bg-rose-600 transition-all';
+    } else if (score === 2) {
+        bar.className = 'h-2 w-0 bg-amber-400 transition-all';
+    } else {
+        bar.className = 'h-2 w-0 bg-emerald-500 transition-all';
+    }
+    bar.style.width = percent + '%';
+}
+
+function validateRegisterForm() {
+    let valid = true;
+    // clear all
+    ['reg-name','reg-email','reg-password','reg-terms'].forEach(clearFieldError);
+
+    const name = document.getElementById('reg-name').value.trim();
+    const email = document.getElementById('reg-email').value.trim();
+    const password = document.getElementById('reg-password').value;
+    const terms = document.getElementById('reg-terms').checked;
+
+    if (name.length < 3) {
+        setFieldError('reg-name', 'Por favor introduza o seu nome completo.');
+        valid = false;
+    }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+        setFieldError('reg-email', 'Endereço de e-mail inválido.');
+        valid = false;
+    }
+
+    if (evaluatePasswordStrength(password) < 2) {
+        setFieldError('reg-password', 'A palavra-passe é fraca. Use 8+ caracteres, misture letras, números e símbolos.');
+        valid = false;
+    }
+
+    if (!terms) {
+        setFieldError('reg-terms', 'É necessário aceitar os termos para continuar.');
+        valid = false;
+    }
+
+    return valid;
+}
+
+// Atualizar a barra de força da password em tempo real
+document.addEventListener('DOMContentLoaded', () => {
+    const pwd = document.getElementById('reg-password');
+    if (pwd) {
+        pwd.addEventListener('input', () => {
+            updatePasswordStrengthBar();
+            clearFieldError('reg-password');
+        });
+    }
+});
+
 function handleRegister(e) {
     e.preventDefault();
     const db = getDatabase();
+
+    // client-side validation
+    if (!validateRegisterForm()) return;
 
     const name = document.getElementById('reg-name').value.trim();
     const email = document.getElementById('reg-email').value.trim().toLowerCase();
@@ -251,7 +348,8 @@ function handleRegister(e) {
     const role = document.querySelector('input[name="reg-role"]:checked').value;
 
     if (db.users.find(u => u.email === email)) {
-        showToast("Este endereço de e-mail já se encontra registado na plataforma.", "error");
+        setFieldError('reg-email', 'Este endereço de e-mail já se encontra registado.');
+        showToast("E-mail já registado.", "error");
         return;
     }
 
@@ -275,8 +373,7 @@ function handleRegister(e) {
 
     db.users.push(newUser);
     saveDatabase(db);
-
-    showToast("A sua conta foi registada e ativada com sucesso!", "success");
+    showToast("A sua conta foi registada com sucesso!", "success");
     
     currentUser = newUser;
     sessionStorage.setItem('ML_ACTIVE_USER', JSON.stringify(currentUser));

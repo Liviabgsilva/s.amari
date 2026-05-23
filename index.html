@@ -468,16 +468,22 @@
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-slate-600 mb-2">Nome Completo</label>
-                            <input id="reg-name" type="text" required class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F]" />
+                            <input id="reg-name" type="text" required placeholder="Ex.: Maria da Silva" class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F]" />
+                            <p id="reg-name-error" class="text-rose-600 text-xs mt-1 hidden"></p>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-sm font-semibold text-slate-600 mb-2">E-mail</label>
-                                <input id="reg-email" type="email" required class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F]" />
+                                <input id="reg-email" type="email" required placeholder="nome@exemplo.com" class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F]" />
+                                <p id="reg-email-error" class="text-rose-600 text-xs mt-1 hidden"></p>
                             </div>
                             <div>
                                 <label class="block text-sm font-semibold text-slate-600 mb-2">Palavra-passe</label>
-                                <input id="reg-password" type="password" required class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F]" />
+                                <input id="reg-password" type="password" required placeholder="Mín. 8 caracteres" class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F]" />
+                                <div class="h-2 mt-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                                    <div id="reg-password-strength" class="h-2 w-0 bg-amber-400 transition-all"></div>
+                                </div>
+                                <p id="reg-password-error" class="text-rose-600 text-xs mt-1 hidden"></p>
                             </div>
                         </div>
                         <div id="patient-only-fields">
@@ -511,8 +517,12 @@
                                     <input id="reg-specialty" type="text" class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F]" />
                                 </div>
                             </div>
+                        <div class="flex items-start gap-3">
+                            <input id="reg-terms" type="checkbox" class="mt-1 h-4 w-4 text-[#0B8C7F]" />
+                            <label for="reg-terms" class="text-xs text-slate-600">Li e concordo com os <a href="#" class="text-[#0B8C7F] underline">Termos de Utilização</a> e a <a href="#" class="text-[#0B8C7F] underline">Política de Privacidade</a>.</label>
                         </div>
-                        <button type="submit" class="w-full rounded-2xl bg-[#0B8C7F] text-white font-bold py-3 text-sm hover:bg-[#0C6F64]">Criar Conta</button>
+                        <p id="reg-terms-error" class="text-rose-600 text-xs mt-1 hidden"></p>
+                        <button id="reg-submit-btn" type="submit" class="w-full rounded-2xl bg-[#0B8C7F] text-white font-bold py-3 text-sm hover:bg-[#0C6F64]">Criar Conta</button>
                     </form>
                 </div>
             </div>
