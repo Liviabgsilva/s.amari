@@ -448,7 +448,7 @@
                     </div>
                     <button id="modal-register-cta" type="button" onclick="submitRegisterFromModal()" class="hidden bg-[#0B8C7F] text-white px-5 rounded-full text-sm font-bold h-10 flex items-center justify-center shadow-sm w-full sm:w-auto sm:ml-6">Registrar</button>
                 </div>
-                        <div id="form-login">
+                <div id="form-login">
                     <form onsubmit="handleLogin(event)" class="space-y-4">
                         <div>
                             <label class="block text-sm font-semibold text-slate-600 mb-2">E-mail</label>
@@ -456,7 +456,14 @@
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-slate-600 mb-2">Senha</label>
-                            <input id="login-password" type="password" required class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F]" />
+                            <div class="relative">
+                                <input id="login-password" type="password" required class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F]" />
+                                <button type="button" class="absolute right-3 top-3 text-slate-400" onclick="togglePasswordVisibility('login-password')">👁️</button>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <label class="inline-flex items-center text-sm"><input id="login-remember" type="checkbox" class="mr-2">Lembrar de mim</label>
+                            <a href="#" onclick="handleForgotPassword()" class="text-sm text-[#0B8C7F]">Esqueci minha senha</a>
                         </div>
                         <button type="submit" class="w-full rounded-2xl bg-[#0B8C7F] text-white font-bold py-3 text-sm hover:bg-[#0C6F64]">Entrar</button>
                     </form>
