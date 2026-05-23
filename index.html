@@ -487,17 +487,31 @@
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-semibold text-slate-600 mb-2">E-mail</label>
+                                <label class="block text-sm font-semibold text-slate-600 mb-2">Nome de usuário</label>
+                                <input id="reg-username" type="text" required placeholder="Escolha um nome de utilizador" class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F]" />
+                                <p id="reg-username-error" class="text-rose-600 text-xs mt-1 hidden"></p>
+
+                                <label class="block text-sm font-semibold text-slate-600 mb-2 mt-3">E-mail</label>
                                 <input id="reg-email" type="email" required placeholder="nome@exemplo.com" class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F]" />
                                 <p id="reg-email-error" class="text-rose-600 text-xs mt-1 hidden"></p>
                             </div>
                             <div>
                                 <label class="block text-sm font-semibold text-slate-600 mb-2">Senha</label>
-                                <input id="reg-password" type="password" required placeholder="Mín. 8 caracteres" class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F]" />
+                                <div class="relative">
+                                    <input id="reg-password" type="password" required placeholder="Mín. 8 caracteres" class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F]" />
+                                    <button type="button" class="absolute right-3 top-3 text-slate-400" onclick="togglePasswordVisibility('reg-password')">👁️</button>
+                                </div>
                                 <div class="h-2 mt-2 w-full bg-slate-100 rounded-full overflow-hidden">
                                     <div id="reg-password-strength" class="h-2 w-0 bg-amber-400 transition-all"></div>
                                 </div>
                                 <p id="reg-password-error" class="text-rose-600 text-xs mt-1 hidden"></p>
+
+                                <label class="block text-sm font-semibold text-slate-600 mb-2 mt-3">Confirmar Senha</label>
+                                <div class="relative">
+                                    <input id="reg-password-confirm" type="password" required placeholder="Repita a sua senha" class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F]" />
+                                    <button type="button" class="absolute right-3 top-3 text-slate-400" onclick="togglePasswordVisibility('reg-password-confirm')">👁️</button>
+                                </div>
+                                <p id="reg-password-confirm-error" class="text-rose-600 text-xs mt-1 hidden"></p>
                             </div>
                         </div>
                         <div id="patient-only-fields">
