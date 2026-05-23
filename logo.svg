@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 90" role="img" aria-label="Logótipo MoreLife">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0B8C7F"/>
+      <stop offset="100%" stop-color="#4BBF73"/>
+    </linearGradient>
+    <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#105773"/>
+      <stop offset="100%" stop-color="#21A680"/>
+    </linearGradient>
+  </defs>
+  <rect width="320" height="90" fill="none"/>
+  <circle cx="45" cy="45" r="38" fill="url(#g1)" opacity="0.95"/>
+  <path d="M45 20c-3 0-6 1-8 3-2 2-3 5-3 8v10c0 2 1 4 3 5 2 2 5 3 8 3s6-1 8-3c2-1 3-3 3-5V31c0-3-1-6-3-8-2-2-5-3-8-3Zm0 12c1 0 2 1 2 2v8c0 1-1 2-2 2s-2-1-2-2v-8c0-1 1-2 2-2Z" fill="#fff" opacity="0.95"/>
+  <path d="M32 48c1-3 4-5 7-5s6 2 7 5c1 3 1 5 0 8-1 3-4 5-7 5s-6-2-7-5c-1-3-1-5 0-8Zm21 0c-1-2-3-3-5-3s-4 1-5 3c-1 2-1 4 0 6 1 2 3 3 5 3s4-1 5-3c1-2 1-4 0-6Z" fill="#fff" opacity="0.9"/>
+  <path d="M44 24c3-2 6-3 9-3s7 1 10 3l1 1v6s-5-2-10-2-10 2-10 2v-7l0-1Z" fill="#daf5e9"/>
+  <text x="92" y="35" font-family="Montserrat, sans-serif" font-size="28" font-weight="800" fill="#105773">More</text>
+  <text x="188" y="35" font-family="Montserrat, sans-serif" font-size="28" font-weight="800" fill="#21A680">Life</text>
+  <text x="92" y="57" font-family="Inter, sans-serif" font-size="12" fill="#0B8C7F" letter-spacing="0.12em">HEALTH &amp; WELLNESS FOR YOU</text>
+</svg>
