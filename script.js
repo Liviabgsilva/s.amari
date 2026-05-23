@@ -361,7 +361,10 @@ function handleRegister(e) {
     const db = getDatabase();
 
     // client-side validation
-    if (!validateRegisterForm()) return;
+    if (!validateRegisterForm()) {
+        showToast('Por favor, corrija os campos assinalados e tente novamente.', 'error');
+        return;
+    }
 
     const name = document.getElementById('reg-name').value.trim();
     const email = document.getElementById('reg-email').value.trim().toLowerCase();
@@ -392,16 +395,21 @@ function handleRegister(e) {
         newUser.specialty = document.getElementById('reg-specialty').value;
     }
 
-    db.users.push(newUser);
-    saveDatabase(db);
-    showToast("A sua conta foi registada com sucesso!", "success");
-    
-    currentUser = newUser;
-    sessionStorage.setItem('ML_ACTIVE_USER', JSON.stringify(currentUser));
-    
-    closeAuthModal();
-    renderSystem();
-    updateImpactStats();
+    try {
+        db.users.push(newUser);
+        saveDatabase(db);
+        showToast(`Conta criada com sucesso! Bem-vindo(a), ${name.split(' ')[0]}.`, 'success');
+
+        currentUser = newUser;
+        sessionStorage.setItem('ML_ACTIVE_USER', JSON.stringify(currentUser));
+
+        closeAuthModal();
+        renderSystem();
+        updateImpactStats();
+    } catch (err) {
+        console.error('Register save error', err);
+        showToast('Ocorreu um erro ao gravar a sua conta. Tente novamente mais tarde.', 'error');
+    }
 }
 
 function handleLogin(e) {
