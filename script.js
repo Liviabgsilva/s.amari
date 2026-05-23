@@ -423,19 +423,25 @@ function renderSystem() {
     const landingSection = document.getElementById('section-landing');
     const patientSection = document.getElementById('section-patient');
     const doctorSection = document.getElementById('section-doctor');
-
-    if (!currentUser) {
-        headerActions.innerHTML = `
-            <button onclick="openLoginModal()" class="text-[#105773] hover:text-[#0B8C7F] font-bold px-4 py-2.5 rounded-xl transition-all text-sm">
-                Entrar
-            </button>
-            <button onclick="openRegisterModal('patient')" class="bg-[#0B8C7F] hover:bg-[#21A680] text-white font-bold px-5 py-2.5 rounded-xl transition-all shadow-sm text-sm">
-                Registar
-            </button>
-        `;
-        landingSection.classList.remove('hidden');
-        patientSection.classList.add('hidden');
-        doctorSection.classList.add('hidden');
+    // If the page doesn't include the main sections (standalone pages like register.html),
+    // avoid running the full render to prevent null reference errors.
+    if (!headerActions || !landingSection || !patientSection || !doctorSection) {
+        if (headerActions) {
+            if (!currentUser) {
+                headerActions.innerHTML = `
+                    <button onclick="openLoginModal()" class="text-[#105773] hover:text-[#0B8C7F] font-bold px-4 py-2.5 rounded-xl transition-all text-sm">Entrar</button>
+                    <button onclick="openRegisterModal('patient')" class="bg-[#0B8C7F] hover:bg-[#21A680] text-white font-bold px-5 py-2.5 rounded-xl transition-all shadow-sm text-sm">Registar</button>
+                `;
+            } else {
+                // minimal header for logged users on standalone pages
+                headerActions.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="text-sm font-semibold">Olá, ${currentUser.name.split(' ')[0]}</span>
+                        <button onclick="handleLogout()" class="bg-rose-600 hover:bg-rose-700 text-white font-bold px-3 py-1 rounded">Sair</button>
+                    </div>
+                `;
+            }
+        }
         return;
     }
 
