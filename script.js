@@ -223,6 +223,23 @@ function switchAuthTab(tab) {
     }
 }
 
+// Safe submit helper for the modal's Register CTA
+function submitRegisterFromModal() {
+    const form = document.querySelector('#form-register form');
+    if (!form) return;
+    if (typeof form.requestSubmit === 'function') {
+        form.requestSubmit();
+        return;
+    }
+    const submitBtn = form.querySelector('button[type="submit"], input[type="submit"]');
+    if (submitBtn) {
+        submitBtn.click();
+        return;
+    }
+    // Fallback: dispatch submit event
+    form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+}
+
 // (mobile nav removed)
 
 function toggleRegisterFormFields(role) {

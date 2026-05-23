@@ -442,11 +442,11 @@
                     <p id="modal-subtitle-text" class="text-sm text-slate-500 mt-2">Bem-vindo(a) de volta à sua conta MoreLife.</p>
                 </div>
                 <div class="flex flex-col sm:flex-row items-center justify-between mb-6 gap-3">
-                    <div class="flex rounded-full bg-slate-100 p-1 w-full sm:w-auto gap-2">
-                        <button id="tab-login" type="button" onclick="switchAuthTab('login')" class="flex-1 py-3 px-4 text-sm font-semibold text-[#105773] bg-white rounded-full shadow-sm">Entrar</button>
-                        <button id="tab-register" type="button" onclick="switchAuthTab('register')" class="flex-1 py-3 px-4 text-sm font-semibold text-slate-500 hover:text-slate-700">Registar</button>
+                    <div class="flex w-full sm:w-auto gap-3">
+                        <button id="tab-login" type="button" onclick="switchAuthTab('login')" class="flex-1 py-2 px-3 text-sm font-semibold text-[#105773] border-b-2 border-transparent hover:border-[#0B8C7F]">Entrar</button>
+                        <button id="tab-register" type="button" onclick="switchAuthTab('register')" class="flex-1 py-2 px-3 text-sm font-semibold text-slate-600 hover:text-[#105773]">Registar</button>
                     </div>
-                    <button id="modal-register-cta" type="button" onclick="document.querySelector('#form-register form').requestSubmit()" class="hidden bg-[#0B8C7F] text-white px-5 rounded-full text-sm font-bold h-10 flex items-center justify-center shadow-sm w-full sm:w-auto sm:ml-6">Registrar</button>
+                    <button id="modal-register-cta" type="button" onclick="submitRegisterFromModal()" class="hidden bg-[#0B8C7F] text-white px-5 rounded-full text-sm font-bold h-10 flex items-center justify-center shadow-sm w-full sm:w-auto sm:ml-6">Registrar</button>
                 </div>
                         <div id="form-login">
                     <form onsubmit="handleLogin(event)" class="space-y-4">
