@@ -39,14 +39,13 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex items-center justify-between">
             
             <!-- LOGÓTIPO OFICIAL INTEGRADO (Utiliza o ficheiro local na mesma pasta) -->
-            <div class="flex items-center cursor-pointer" onclick="goToHome()">
+            <div class="flex items-center cursor-pointer gap-3" onclick="goToHome()">
                 <div class="flex items-center justify-center transition-all hover:scale-105">
-                    <img src="./logo.svg" alt="Logótipo MoreLife" title="MoreLife" class="h-14 sm:h-16 object-contain" onerror="this.style.display='none'; document.getElementById('logo-fallback').classList.remove('hidden');">
-                    
-                    <!-- Fallback de segurança se a imagem falhar -->
-                    <div id="logo-fallback" class="hidden flex items-center gap-2 py-1">
-                        <span class="font-title text-xl font-extrabold tracking-tight leading-none text-[#105773]">More<span class="text-[#21A680]">Life</span></span>
-                    </div>
+                    <img src="./logo.svg" alt="Logótipo MoreLife" title="MoreLife" class="h-16 sm:h-20 object-contain" />
+                </div>
+                <div class="hidden sm:flex flex-col">
+                    <span class="font-title text-lg sm:text-xl font-extrabold tracking-tight leading-none text-[#105773]">More<span class="text-[#21A680]">Life</span></span>
+                    <span class="text-xs text-slate-500 uppercase tracking-[0.2em]">Health & Wellness</span>
                 </div>
             </div>
 
