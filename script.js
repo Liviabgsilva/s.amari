@@ -445,7 +445,7 @@ function renderSystem() {
 
     let dashboardAction = '';
     if (currentUser.role === 'patient') {
-        dashboardAction = `<button onclick="showPatientDashboard()" class="text-[#0B8C7F] hover:text-[#21A680] font-bold text-sm">Painel do Utente</button>`;
+        dashboardAction = `<button onclick="showPatientDashboard()" class="text-[#0B8C7F] hover:text-[#21A680] font-bold text-sm">Painel do Paciente</button>`;
     } else if (currentUser.role === 'doctor') {
         dashboardAction = `<button onclick="showDoctorDashboard()" class="text-[#0B8C7F] hover:text-[#21A680] font-bold text-sm">Painel do Médico</button>`;
     }
@@ -477,7 +477,7 @@ function renderSystem() {
 }
 
 // ============================================
-// 6. ÁREA DE UTENTE (PACIENTE)
+// 6. ÁREA DO PACIENTE
 // ============================================
 function renderPatientDashboard() {
     if (!currentUser || currentUser.role !== 'patient') return;
@@ -649,13 +649,13 @@ function renderDoctorDashboard() {
             <div class="text-center py-12 bg-[#F2F2F2] rounded-2xl border border-slate-200">
                 <span class="text-3xl block mb-2">🥳</span>
                 <p class="text-slate-600 font-bold text-sm">Não há pedidos pendentes!</p>
-                <p class="text-xs text-slate-400 mt-1">Todos os pedidos de utentes para a sua especialidade já foram triados.</p>
+                <p class="text-xs text-slate-400 mt-1">Todos os pedidos de pacientes para a sua especialidade já foram triados.</p>
             </div>
         `;
     } else {
         pendingContainer.innerHTML = pendingRequests.map(ap => {
             const patient = db.users.find(u => u.id === ap.patientId);
-            const patientName = patient ? patient.name : 'Utente';
+            const patientName = patient ? patient.name : 'Paciente';
             const patientIncome = patient ? `€ ${parseFloat(patient.income).toLocaleString('pt-PT', {minimumFractionDigits: 2})}` : 'Não fornecido';
             const patientPhone = patient ? patient.phone : 'Não fornecido';
 
@@ -663,7 +663,7 @@ function renderDoctorDashboard() {
                 <div class="bg-white border-2 border-dashed border-slate-200 rounded-2xl p-5 hover:border-[#21A680] transition-all">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
                         <div>
-                            <span class="text-xs text-[#0B8C7F] font-bold uppercase tracking-wider block">Perfil Social do Utente</span>
+                            <span class="text-xs text-[#0B8C7F] font-bold uppercase tracking-wider block">Perfil Social do Paciente</span>
                             <h4 class="font-title text-base font-bold text-slate-800">${patientName}</h4>
                         </div>
                         <div class="text-left sm:text-right">
@@ -697,7 +697,7 @@ function renderDoctorDashboard() {
     } else {
         agendaContainer.innerHTML = myAgenda.map(ap => {
             const patient = db.users.find(u => u.id === ap.patientId);
-            const patientName = patient ? patient.name : 'Utente';
+            const patientName = patient ? patient.name : 'Paciente';
 
             return `
                 <div class="bg-[#F2F2F2] p-4 rounded-xl border border-slate-200 text-xs space-y-2">
