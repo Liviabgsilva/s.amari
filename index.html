@@ -545,6 +545,11 @@
                                     <input id="reg-specialty" type="text" class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F]" />
                                 </div>
                             </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-600 mb-2">Foto de Perfil (opcional)</label>
+                            <input id="reg-photo" type="file" accept="image/*" class="w-full text-sm" onchange="handleRegPhotoChange(event)" />
+                            <img id="reg-photo-preview" src="" alt="Preview" class="mt-2 w-20 h-20 object-cover rounded-md hidden" />
+                        </div>
                         <div class="flex items-start gap-3">
                             <input id="reg-terms" type="checkbox" class="mt-1 h-4 w-4 text-[#0B8C7F]" />
                             <label for="reg-terms" class="text-xs text-slate-600">Li e concordo com os <a href="#" class="text-[#0B8C7F] underline">Termos de Utilização</a> e a <a href="#" class="text-[#0B8C7F] underline">Política de Privacidade</a>.</label>

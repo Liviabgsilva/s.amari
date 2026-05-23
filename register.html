@@ -29,19 +29,34 @@
           <div id="reg-name-error" class="hidden text-rose-600 text-xs mt-1"></div>
         </div>
 
-        <div>
-          <label class="block text-xs font-semibold text-slate-600">E-mail</label>
-          <input id="reg-email" name="reg-email" type="email" required class="mt-1 w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F]" />
-          <div id="reg-email-error" class="hidden text-rose-600 text-xs mt-1"></div>
-        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600">Nome de usuário</label>
+            <input id="reg-username" name="reg-username" type="text" required class="mt-1 w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F]" />
+            <div id="reg-username-error" class="hidden text-rose-600 text-xs mt-1"></div>
 
-        <div>
-          <label class="block text-xs font-semibold text-slate-600">Senha</label>
-          <input id="reg-password" name="reg-password" type="password" required class="mt-1 w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F]" />
-          <div class="w-full bg-slate-100 rounded-full mt-2 h-2 overflow-hidden">
-            <div id="reg-password-strength" class="h-2 w-0 bg-emerald-500 transition-all"></div>
+            <label class="block text-xs font-semibold text-slate-600 mt-3">E-mail</label>
+            <input id="reg-email" name="reg-email" type="email" required class="mt-1 w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F]" />
+            <div id="reg-email-error" class="hidden text-rose-600 text-xs mt-1"></div>
           </div>
-          <div id="reg-password-error" class="hidden text-rose-600 text-xs mt-1"></div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600">Senha</label>
+            <div class="relative">
+              <input id="reg-password" name="reg-password" type="password" required class="mt-1 w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F]" />
+              <button type="button" class="absolute right-3 top-3 text-slate-400" onclick="togglePasswordVisibility('reg-password')">👁️</button>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full mt-2 h-2 overflow-hidden">
+              <div id="reg-password-strength" class="h-2 w-0 bg-emerald-500 transition-all"></div>
+            </div>
+            <div id="reg-password-error" class="hidden text-rose-600 text-xs mt-1"></div>
+
+            <label class="block text-xs font-semibold text-slate-600 mt-3">Confirmar Senha</label>
+            <div class="relative">
+              <input id="reg-password-confirm" type="password" required class="mt-1 w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F]" />
+              <button type="button" class="absolute right-3 top-3 text-slate-400" onclick="togglePasswordVisibility('reg-password-confirm')">👁️</button>
+            </div>
+            <div id="reg-password-confirm-error" class="hidden text-rose-600 text-xs mt-1"></div>
+          </div>
         </div>
 
         <div>
@@ -82,6 +97,11 @@
           </div>
         </div>
 
+        <div>
+          <label class="block text-xs font-semibold text-slate-600">Foto de Perfil (opcional)</label>
+          <input id="reg-photo" type="file" accept="image/*" class="mt-1" onchange="handleRegPhotoChange(event)" />
+          <img id="reg-photo-preview" src="" alt="Preview" class="mt-2 w-24 h-24 object-cover rounded-md hidden" />
+        </div>
         <div>
           <label class="inline-flex items-center"><input id="reg-terms" type="checkbox" class="mr-2" />Aceito os termos e condições</label>
           <div id="reg-terms-error" class="hidden text-rose-600 text-xs mt-1"></div>
