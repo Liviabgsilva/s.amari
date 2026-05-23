@@ -314,16 +314,29 @@ function updatePasswordStrengthBar() {
 function validateRegisterForm() {
     let valid = true;
     // clear all
-    ['reg-name','reg-email','reg-password','reg-terms'].forEach(clearFieldError);
+    ['reg-name','reg-username','reg-email','reg-password','reg-password-confirm','reg-terms'].forEach(clearFieldError);
 
-    const name = document.getElementById('reg-name').value.trim();
-    const email = document.getElementById('reg-email').value.trim();
-    const password = document.getElementById('reg-password').value;
-    const terms = document.getElementById('reg-terms').checked;
+    const name = (document.getElementById('reg-name') || {value:''}).value.trim();
+    const username = (document.getElementById('reg-username') || {value:''}).value.trim();
+    const email = (document.getElementById('reg-email') || {value:''}).value.trim();
+    const password = (document.getElementById('reg-password') || {value:''}).value;
+    const passwordConfirm = (document.getElementById('reg-password-confirm') || {value:''}).value;
+    const terms = (document.getElementById('reg-terms') || {checked:false}).checked;
 
     if (name.length < 3) {
         setFieldError('reg-name', 'Por favor introduza o seu nome completo.');
         valid = false;
+    }
+
+    if (username.length < 3) {
+        setFieldError('reg-username', 'Escolha um nome de utilizador com pelo menos 3 caracteres.');
+        valid = false;
+    } else {
+        const db = getDatabase();
+        if (db.users.find(u => u.username && u.username.toLowerCase() === username.toLowerCase())) {
+            setFieldError('reg-username', 'Nome de usuário já em uso.');
+            valid = false;
+        }
     }
 
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -332,8 +345,13 @@ function validateRegisterForm() {
         valid = false;
     }
 
-    if (evaluatePasswordStrength(password) < 2) {
-        setFieldError('reg-password', 'A senha é fraca. Use 8+ caracteres, misture letras, números e símbolos.');
+    if (password.length < 8 || evaluatePasswordStrength(password) < 2) {
+        setFieldError('reg-password', 'A senha deve ter pelo menos 8 caracteres e combinar letras, números e símbolos.');
+        valid = false;
+    }
+
+    if (password !== passwordConfirm) {
+        setFieldError('reg-password-confirm', 'As senhas não coincidem.');
         valid = false;
     }
 
@@ -356,7 +374,62 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-function handleRegister(e) {
+// Helpers: read file as data URL and hash string using Web Crypto API
+function readFileAsDataURL(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+async function hashString(str) {
+    if (!str) return '';
+    const enc = new TextEncoder();
+    const data = enc.encode(str);
+    const hash = await crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+function togglePasswordVisibility(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.type = el.type === 'password' ? 'text' : 'password';
+}
+
+function handleRegPhotoChange(e) {
+    const file = e.target.files && e.target.files[0];
+    const preview = document.getElementById('reg-photo-preview');
+    if (!file) {
+        if (preview) preview.classList.add('hidden');
+        return;
+    }
+    readFileAsDataURL(file).then(dataUrl => {
+        if (preview) {
+            preview.src = dataUrl;
+            preview.classList.remove('hidden');
+        }
+    }).catch(() => {});
+}
+
+async function handleForgotPassword() {
+    const email = prompt('Introduza o seu e-mail para recuperar a senha:');
+    if (!email) return;
+    const db = getDatabase();
+    const user = db.users.find(u => u.email === email.toLowerCase());
+    if (!user) {
+        showToast('E-mail não encontrado.', 'error');
+        return;
+    }
+    // mock: open mailto with instructions
+    const subject = encodeURIComponent('Recuperação de senha - MoreLife');
+    const body = encodeURIComponent('Olá,\n\nRecebemos um pedido de recuperação de senha. Como este é um ambiente local, por favor redefina a sua senha diretamente na aplicação ou contacte o suporte.\n\nCumprimentos,\nMoreLife');
+    window.location.href = `mailto:${user.email}?subject=${subject}&body=${body}`;
+    showToast('Enviámos instruções para o seu e-mail (mock).', 'success');
+}
+
+async function handleRegister(e) {
     e.preventDefault();
     const db = getDatabase();
 
@@ -367,22 +440,29 @@ function handleRegister(e) {
     }
 
     const name = document.getElementById('reg-name').value.trim();
+    const username = document.getElementById('reg-username').value.trim();
     const email = document.getElementById('reg-email').value.trim().toLowerCase();
     const password = document.getElementById('reg-password').value;
     const role = document.querySelector('input[name="reg-role"]:checked').value;
 
     if (db.users.find(u => u.email === email)) {
         setFieldError('reg-email', 'Este endereço de e-mail já se encontra registado.');
-        showToast("E-mail já registado.", "error");
+        showToast('E-mail já registado.', 'error');
+        return;
+    }
+    if (db.users.find(u => u.username && u.username.toLowerCase() === username.toLowerCase())) {
+        setFieldError('reg-username', 'Este nome de usuário já se encontra registado.');
+        showToast('Nome de usuário já existe.', 'error');
         return;
     }
 
     const newUser = {
         id: 'u-' + Date.now(),
         name,
+        username,
         email,
-        password,
-        role
+        role,
+        createdAt: new Date().toISOString()
     };
 
     if (role === 'patient') {
@@ -395,7 +475,22 @@ function handleRegister(e) {
         newUser.specialty = document.getElementById('reg-specialty').value;
     }
 
+    // profile photo
+    const photoInput = document.getElementById('reg-photo');
+    if (photoInput && photoInput.files && photoInput.files[0]) {
+        try {
+            newUser.photo = await readFileAsDataURL(photoInput.files[0]);
+        } catch (err) {
+            console.warn('photo read failed', err);
+        }
+    } else {
+        newUser.photo = null;
+    }
+
     try {
+        // hash password before storing
+        newUser.password = await hashString(password);
+
         db.users.push(newUser);
         saveDatabase(db);
         showToast(`Conta criada com sucesso! Bem-vindo(a), ${name.split(' ')[0]}.`, 'success');
@@ -412,24 +507,47 @@ function handleRegister(e) {
     }
 }
 
-function handleLogin(e) {
+async function handleLogin(e) {
     e.preventDefault();
     const db = getDatabase();
 
     const email = document.getElementById('login-email').value.trim().toLowerCase();
     const password = document.getElementById('login-password').value;
 
-    const user = db.users.find(u => u.email === email && u.password === password);
-
+    const user = db.users.find(u => u.email === email);
     if (!user) {
-        showToast("E-mail ou senha incorretos. Tente novamente.", "error");
+        showToast('E-mail ou senha incorretos. Tente novamente.', 'error');
+        return;
+    }
+
+    let matched = false;
+    // if stored password equals raw input (legacy), upgrade to hashed
+    if (user.password === password) {
+        try {
+            const h = await hashString(password);
+            user.password = h;
+            saveDatabase(db);
+            matched = true;
+        } catch (e) {
+            // continue to try hash compare
+        }
+    }
+
+    if (!matched) {
+        const hashedInput = await hashString(password);
+        if (hashedInput === user.password) matched = true;
+    }
+
+    if (!matched) {
+        showToast('E-mail ou senha incorretos. Tente novamente.', 'error');
         return;
     }
 
     currentUser = user;
-    sessionStorage.setItem('ML_ACTIVE_USER', JSON.stringify(currentUser));
-    
-    showToast(`Bem-vindo, ${user.name}!`, "success");
+    const remember = document.getElementById('login-remember') && document.getElementById('login-remember').checked;
+    if (remember) localStorage.setItem('ML_ACTIVE_USER', JSON.stringify(currentUser)); else sessionStorage.setItem('ML_ACTIVE_USER', JSON.stringify(currentUser));
+
+    showToast(`Bem-vindo, ${user.name.split(' ')[0]}!`, 'success');
     closeAuthModal();
     renderSystem();
 }
