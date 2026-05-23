@@ -419,14 +419,26 @@ function handleLogout() {
     sessionStorage.removeItem('ML_ACTIVE_USER');
     showToast("Sessão terminada com segurança.", "warning");
     goToHome();
-}
+        showToast("A sua conta foi registada com sucesso!", "success");
 
-function goToHome() {
-    document.getElementById('section-landing').classList.remove('hidden');
-    document.getElementById('section-patient').classList.add('hidden');
-    document.getElementById('section-doctor').classList.add('hidden');
-    renderSystem();
-}
+        currentUser = newUser;
+        sessionStorage.setItem('ML_ACTIVE_USER', JSON.stringify(currentUser));
+
+        // Se estivermos na página dedicada de registo, redirecionar para a homepage
+        try {
+            if (window.location.pathname && window.location.pathname.includes('register.html')) {
+                // Dar tempo para o toast aparecer
+                setTimeout(() => { window.location.href = 'index.html'; }, 800);
+                return;
+            }
+        } catch (e) {}
+
+        const authModal = document.getElementById('auth-modal');
+        if (authModal) {
+            closeAuthModal();
+        }
+        try { renderSystem(); } catch (e) {}
+        try { updateImpactStats(); } catch (e) {}
 
 // ============================================
 // 5. ATUALIZAÇÃO DOS PAINÉIS
@@ -442,14 +454,16 @@ function renderSystem() {
             <button onclick="openLoginModal()" class="text-[#105773] hover:text-[#0B8C7F] font-bold px-4 py-2.5 rounded-xl transition-all text-sm">
                 Entrar
             </button>
-            <a href="register.html" class="bg-[#0B8C7F] hover:bg-[#21A680] text-white font-bold px-5 py-2.5 rounded-xl transition-all shadow-sm text-sm inline-block text-center">Registar</a>
+            <button onclick="openRegisterModal('patient')" class="bg-[#0B8C7F] hover:bg-[#21A680] text-white font-bold px-5 py-2.5 rounded-xl transition-all shadow-sm text-sm">
+                Registar
+            </button>
         `;
         // também atualizar o menu móvel se existir
         const mobileAuth = document.getElementById('mobile-auth-actions');
         if (mobileAuth) {
             mobileAuth.innerHTML = `
-                <a href="register.html" class="w-full block text-left bg-[#0B8C7F] hover:bg-[#21A680] text-white font-bold py-2 px-3 rounded-md mt-2">Registar</a>
                 <button onclick="openLoginModal(); toggleMobileNav()" class="w-full text-left text-[#105773] hover:text-[#0B8C7F] font-bold py-2">Entrar</button>
+                <button onclick="openRegisterModal('patient'); toggleMobileNav()" class="w-full text-left bg-[#0B8C7F] hover:bg-[#21A680] text-white font-bold py-2 px-3 rounded-md mt-2">Registar</button>
             `;
         }
         landingSection.classList.remove('hidden');
