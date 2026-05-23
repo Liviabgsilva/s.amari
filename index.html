@@ -441,14 +441,14 @@
                     <button id="tab-login" type="button" onclick="switchAuthTab('login')" class="flex-1 py-3 text-sm font-semibold text-[#105773] bg-white rounded-full shadow-sm">Entrar</button>
                     <button id="tab-register" type="button" onclick="switchAuthTab('register')" class="flex-1 py-3 text-sm font-semibold text-slate-500 hover:text-slate-700">Registar</button>
                 </div>
-                <div id="form-login">
+                        <div id="form-login">
                     <form onsubmit="handleLogin(event)" class="space-y-4">
                         <div>
                             <label class="block text-sm font-semibold text-slate-600 mb-2">E-mail</label>
                             <input id="login-email" type="email" required class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F]" />
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold text-slate-600 mb-2">Palavra-passe</label>
+                            <label class="block text-sm font-semibold text-slate-600 mb-2">Senha</label>
                             <input id="login-password" type="password" required class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F]" />
                         </div>
                         <button type="submit" class="w-full rounded-2xl bg-[#0B8C7F] text-white font-bold py-3 text-sm hover:bg-[#0C6F64]">Entrar</button>
@@ -478,7 +478,7 @@
                                 <p id="reg-email-error" class="text-rose-600 text-xs mt-1 hidden"></p>
                             </div>
                             <div>
-                                <label class="block text-sm font-semibold text-slate-600 mb-2">Palavra-passe</label>
+                                <label class="block text-sm font-semibold text-slate-600 mb-2">Senha</label>
                                 <input id="reg-password" type="password" required placeholder="Mín. 8 caracteres" class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F]" />
                                 <div class="h-2 mt-2 w-full bg-slate-100 rounded-full overflow-hidden">
                                     <div id="reg-password-strength" class="h-2 w-0 bg-amber-400 transition-all"></div>

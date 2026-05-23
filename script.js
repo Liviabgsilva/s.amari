@@ -312,7 +312,7 @@ function validateRegisterForm() {
     }
 
     if (evaluatePasswordStrength(password) < 2) {
-        setFieldError('reg-password', 'A palavra-passe é fraca. Use 8+ caracteres, misture letras, números e símbolos.');
+        setFieldError('reg-password', 'A senha é fraca. Use 8+ caracteres, misture letras, números e símbolos.');
         valid = false;
     }
 
@@ -393,7 +393,7 @@ function handleLogin(e) {
     const user = db.users.find(u => u.email === email && u.password === password);
 
     if (!user) {
-        showToast("E-mail ou palavra-passe incorretos. Tente novamente.", "error");
+        showToast("E-mail ou senha incorretos. Tente novamente.", "error");
         return;
     }
 
