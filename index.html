@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoreLife - Saúde & Bem-Estar para Si</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'ml-primary': '#105773',     // Azul escuro/Teal fechado (Confiança)
+                        'ml-secondary': '#0B8C7F',   // Teal médio escuro
+                        'ml-accent': '#21A680',      // Verde água médio
+                        'ml-success': '#4BBF73',     // Verde claro vibrante
+                        'ml-bg': '#F2F2F2',          // Cinza muito claro para o fundo
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts - Montserrat & Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F2F2F2;
+        }
+        .font-title {
+            font-family: 'Montserrat', sans-serif;
+        }
+        /* Barra de rolagem personalizada */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F2F2F2;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #105773;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #0B8C7F;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col text-slate-800">
+
+    <!-- NOTIFICAÇÕES (Toast) -->
+    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- CABEÇALHO / NAVEGAÇÃO (Redesenhado para Branco Líquido para o logótipo fundir-se perfeitamente) -->
+    <header class="bg-white text-slate-800 shadow-sm border-b border-slate-100 sticky top-0 z-40 transition-all h-20 flex items-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex items-center justify-between">
+            
+            <!-- LOGÓTIPO OFICIAL INTEGRADO (Exibido exatamente como a imagem original) -->
+            <div class="flex items-center cursor-pointer" onclick="goToHome()">
+                <div class="flex items-center justify-center transition-all hover:scale-105">
+                    <img src="image_cdb77e.png" alt="Logótipo MoreLife" class="h-12 sm:h-16 object-contain" onerror="this.style.display='none'; document.getElementById('logo-fallback').classList.remove('hidden');">
+                    
+                    <!-- Fallback de segurança caso a imagem local não carregue -->
+                    <div id="logo-fallback" class="hidden flex items-center gap-2 py-1">
+                        <span class="font-title text-xl font-extrabold tracking-tight leading-none text-[#105773]">More<span class="text-[#21A680]">Life</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MENU DE NAVEGAÇÃO -->
+            <nav class="hidden md:flex items-center gap-6">
+                <a href="#" onclick="scrollToSection('como-funciona')" class="text-slate-600 hover:text-[#105773] font-semibold transition-colors">Como Funciona</a>
+                <a href="#" onclick="scrollToSection('especialidades')" class="text-slate-600 hover:text-[#105773] font-semibold transition-colors">Áreas de Apoio</a>
+                <a href="#" onclick="scrollToSection('sobre')" class="text-slate-600 hover:text-[#105773] font-semibold transition-colors">Quem Somos</a>
+            </nav>
+
+            <!-- ÁREA DO UTILIZADOR / BOTÕES -->
+            <div class="flex items-center gap-3" id="auth-header-actions">
+                <!-- Preenchido dinamicamente via JS -->
+            </div>
+        </div>
+    </header>
+
+    <!-- INÍCIO DO CONTEÚDO PRINCIPAL -->
+    <main class="flex-grow">
+        
+        <!-- ============================================ -->
+        <!-- 1. SECÇÃO DA LANDING PAGE                    -->
+        <!-- ============================================ -->
+        <section id="section-landing" class="block">
+            <!-- HERO -->
+            <div class="relative bg-gradient-to-br from-[#105773] to-[#0B8C7F] text-white py-16 md:py-24 px-4 overflow-hidden">
+                <div class="absolute inset-0 opacity-10">
+                    <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" stroke-width="1"/>
+                            </pattern>
+                        </defs>
+                        <rect width="100%" height="100%" fill="url(#grid)" />
+                    </svg>
+                </div>
+                <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center relative z-10">
+                    <div class="space-y-6">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-[#21A680] text-white shadow-sm">
+                            <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+                            Unindo Conhecimento Académico e Solidariedade Social
+                        </span>
+                        <h1 class="font-title text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
+                            A ponte entre a <span class="text-[#4BBF73]">prática clínica</span> e o <span class="text-teal-200">apoio social</span>.
+                        </h1>
+                        <p class="text-lg text-teal-50 font-normal leading-relaxed">
+                            O MoreLife aproxima residentes e pós-graduandos universitários que precisam de consolidar a sua aprendizagem prática, de pessoas em situação de vulnerabilidade que necessitam de cuidados de saúde humanizados de excelência. Tudo 100% gratuito.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4 pt-2">
+                            <button onclick="openRegisterModal('patient')" class="px-8 py-4 bg-[#21A680] hover:bg-[#1f9372] text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                                Preciso de Consulta
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+                            </button>
+                            <button onclick="openRegisterModal('doctor')" class="px-8 py-4 bg-white/10 hover:bg-white/20 border-2 border-white/30 text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 backdrop-blur-sm">
+                                Sou Doutor / Residente
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- CARTÃO GRÁFICO DO HERO -->
+                    <div class="bg-white rounded-3xl p-6 md:p-8 text-slate-800 shadow-2xl relative border border-teal-100">
+                        <div class="absolute -top-4 -right-4 bg-[#4BBF73] text-white p-3 rounded-2xl shadow-lg transform rotate-6">
+                            <span class="block font-bold text-center text-xs">Apoio Social</span>
+                            <span class="block font-black text-center text-base">Gratuito</span>
+                        </div>
+                        <h3 class="font-title text-xl font-bold text-[#105773] mb-4">Os Nossos Números de Impacto</h3>
+                        <div class="grid grid-cols-2 gap-4 mb-6">
+                            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                                <span class="block text-3xl font-black text-[#0B8C7F]" id="stats-consultas">1.420+</span>
+                                <span class="text-xs text-slate-500 font-medium">Consultas Realizadas</span>
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                                <span class="block text-3xl font-black text-[#21A680]" id="stats-profissionais">280+</span>
+                                <span class="text-xs text-slate-500 font-medium">Universitários Ativos</span>
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                                <span class="block text-3xl font-black text-[#4BBF73]" id="stats-universidades">12</span>
+                                <span class="text-xs text-slate-500 font-medium">Universidades Parceiras</span>
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                                <span class="block text-3xl font-black text-[#105773]">100%</span>
+                                <span class="text-xs text-slate-500 font-medium">Grátis para a População</span>
+                            </div>
+                        </div>
+                        
+                        <div class="border-t border-slate-100 pt-4 flex items-center gap-3">
+                            <div class="flex -space-x-2">
+                                <div class="w-8 h-8 rounded-full bg-rose-200 border-2 border-white flex items-center justify-center font-bold text-xs">👨‍⚕️</div>
+                                <div class="w-8 h-8 rounded-full bg-teal-200 border-2 border-white flex items-center justify-center font-bold text-xs">👩‍⚕️</div>
+                                <div class="w-8 h-8 rounded-full bg-amber-200 border-2 border-white flex items-center justify-center font-bold text-xs">👩</div>
+                            </div>
+                            <p class="text-xs text-slate-500 font-medium">
+                                Junte-se a centenas de académicos de destaque do país.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COMO FUNCIONA -->
+            <div id="como-funciona" class="py-20 px-4 max-w-7xl mx-auto">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="font-title text-3xl md:text-4xl font-bold text-[#105773] mb-4">Como funciona o MoreLife?</h2>
+                    <p class="text-slate-600">Simplificamos a marcação de consultas de apoio social, garantindo que o residente aprende na prática enquanto o paciente recebe cuidados de primeira linha.</p>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- PASSO 1 -->
+                    <div class="bg-white rounded-2xl p-8 border border-slate-100 shadow-sm relative group hover:shadow-md transition-all">
+                        <div class="w-14 h-14 bg-teal-50 rounded-2xl flex items-center justify-center text-2xl font-bold text-[#105773] mb-6 group-hover:bg-[#105773] group-hover:text-white transition-colors">
+                            1
+                        </div>
+                        <h3 class="font-title text-xl font-bold text-[#105773] mb-3">Registo Rápido</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            Os pacientes informam as suas necessidades e o agregado familiar. Os médicos e pós-graduandos indicam a universidade, especialidade e o respetivo registo clínico ativo.
+                        </p>
+                    </div>
+
+                    <!-- PASSO 2 -->
+                    <div class="bg-white rounded-2xl p-8 border border-slate-100 shadow-sm relative group hover:shadow-md transition-all">
+                        <div class="w-14 h-14 bg-emerald-50 rounded-2xl flex items-center justify-center text-2xl font-bold text-[#0B8C7F] mb-6 group-hover:bg-[#0B8C7F] group-hover:text-white transition-colors">
+                            2
+                        </div>
+                        <h3 class="font-title text-xl font-bold text-[#0B8C7F] mb-3">Pedido de Consulta</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            O paciente escolhe a área em que precisa de consulta (ex: Medicina Dentária, Psicologia) e envia uma breve descrição do sintoma ou situação clínica que apresenta.
+                        </p>
+                    </div>
+
+                    <!-- PASSO 3 -->
+                    <div class="bg-white rounded-2xl p-8 border border-slate-100 shadow-sm relative group hover:shadow-md transition-all">
+                        <div class="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center text-2xl font-bold text-[#21A680] mb-6 group-hover:bg-[#21A680] group-hover:text-white transition-colors">
+                            3
+                        </div>
+                        <h3 class="font-title text-xl font-bold text-[#21A680] mb-3">Consulta na Clínica</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            O doutor aceita o caso, define a data, a hora e a clínica universitária onde decorrerá a consulta de apoio supervisionada. O paciente é logo alertado.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ÁREAS DE ATENDIMENTO -->
+            <div id="especialidades" class="bg-white py-20 px-4">
+                <div class="max-w-7xl mx-auto">
+                    <div class="text-center max-w-3xl mx-auto mb-16">
+                        <h2 class="font-title text-3xl md:text-4xl font-bold text-[#105773] mb-4">Áreas de Atendimento Oferecidas</h2>
+                        <p class="text-slate-600">Académicos de instituições prestigiadas sob estreita supervisão do corpo docente em várias valências essenciais de saúde.</p>
+                    </div>
+
+                    <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-6">
+                        <!-- Medicina Dentária -->
+                        <div class="bg-[#F2F2F2] p-6 rounded-2xl border border-slate-100 text-center hover:shadow-lg transition-all transform hover:-translate-y-1">
+                            <div class="w-16 h-16 bg-[#105773] text-white rounded-full flex items-center justify-center mx-auto mb-4 text-3xl shadow-md">🦷</div>
+                            <h3 class="font-title font-bold text-[#105773] text-lg mb-2">Medicina Dentária</h3>
+                            <p class="text-xs text-slate-500">Avaliações preventivas, restaurações, destartarizações e extrações.</p>
+                        </div>
+                        
+                        <!-- Psicologia -->
+                        <div class="bg-[#F2F2F2] p-6 rounded-2xl border border-slate-100 text-center hover:shadow-lg transition-all transform hover:-translate-y-1">
+                            <div class="w-16 h-16 bg-[#0B8C7F] text-white rounded-full flex items-center justify-center mx-auto mb-4 text-3xl shadow-md">🧠</div>
+                            <h3 class="font-title font-bold text-[#0B8C7F] text-lg mb-2">Psicologia</h3>
+                            <p class="text-xs text-slate-500">Apoio de saúde mental, psicoterapia individual e acompanhamento.</p>
+                        </div>
+
+                        <!-- Fisioterapia -->
+                        <div class="bg-[#F2F2F2] p-6 rounded-2xl border border-slate-100 text-center hover:shadow-lg transition-all transform hover:-translate-y-1">
+                            <div class="w-16 h-16 bg-[#21A680] text-white rounded-full flex items-center justify-center mx-auto mb-4 text-3xl shadow-md">💪</div>
+                            <h3 class="font-title font-bold text-[#21A680] text-lg mb-2">Fisioterapia</h3>
+                            <p class="text-xs text-slate-500">Reabilitação motora, alívio de dor e correção postural.</p>
+                        </div>
+
+                        <!-- Terapia da Fala -->
+                        <div class="bg-[#F2F2F2] p-6 rounded-2xl border border-slate-100 text-center hover:shadow-lg transition-all transform hover:-translate-y-1">
+                            <div class="w-16 h-16 bg-[#4BBF73] text-white rounded-full flex items-center justify-center mx-auto mb-4 text-3xl shadow-md">🗣️</div>
+                            <h3 class="font-title font-bold text-[#4BBF73] text-lg mb-2">Terapia da Fala</h3>
+                            <p class="text-xs text-slate-500">Apoio na fala, linguagem, deglutição e reabilitação vocal.</p>
+                        </div>
+
+                        <!-- Nutrição -->
+                        <div class="bg-[#F2F2F2] p-6 rounded-2xl border border-slate-100 text-center hover:shadow-lg transition-all transform hover:-translate-y-1">
+                            <div class="w-16 h-16 bg-[#105773] text-white rounded-full flex items-center justify-center mx-auto mb-4 text-3xl shadow-md">🥗</div>
+                            <h3 class="font-title font-bold text-[#105773] text-lg mb-2">Nutrição</h3>
+                            <p class="text-xs text-slate-500">Planos alimentares, reeducação de hábitos e nutrição geral.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QUEM SOMOS -->
+            <div id="sobre" class="py-20 px-4 max-w-7xl mx-auto">
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-wider text-[#0B8C7F]">A Nossa Missão Social</span>
+                        <h2 class="font-title text-3xl md:text-4xl font-bold text-[#105773] mt-2 mb-6">Por que razão criámos a MoreLife?</h2>
+                        <div class="space-y-4 text-slate-600">
+                            <p>Sabemos que milhares de pós-graduandos e médicos internos precisam de encontrar utentes elegíveis para cumprir horas de estágio, desenvolver relatórios e avançar nos estudos académicos.</p>
+                            <p class="font-semibold text-[#105773]">Por outro lado, muitas famílias enfrentam barreiras e longos tempos de espera para consultas privadas ou de especialidade na saúde.</p>
+                            <p>A plataforma **MoreLife** atua como este canal seguro, transparente e direto, em conformidade com as regras das faculdades e clínicas-escola parceiras do projeto.</p>
+                        </div>
+                        <div class="mt-8 pt-6 border-t border-slate-200 flex items-center gap-6">
+                            <div>
+                                <span class="block text-2xl font-bold text-[#105773]">Protocolo</span>
+                                <span class="text-xs text-slate-500">Com diversas universidades públicas</span>
+                            </div>
+                            <div class="w-px h-10 bg-slate-200"></div>
+                            <div>
+                                <span class="block text-2xl font-bold text-[#21A680]">Garantia</span>
+                                <span class="text-xs text-slate-500">Consultas validadas por professores</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <div class="bg-gradient-to-tr from-[#105773] to-[#4BBF73] rounded-3xl p-1 md:p-2 shadow-2xl overflow-hidden aspect-[4/3] flex items-center justify-center">
+                            <div class="bg-white rounded-2xl w-full h-full p-8 flex flex-col justify-between">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm font-semibold text-[#105773] bg-[#F2F2F2] px-3 py-1 rounded-full">Prática Supervisionada</span>
+                                    <span class="text-xs text-slate-400">Ref: 282-ML</span>
+                                </div>
+                                <div class="my-6">
+                                    <h4 class="font-title text-2xl font-bold text-slate-800 leading-snug">"Conseguimos o diagnóstico do meu filho de forma atenciosa, rápida e sem qualquer custo."</h4>
+                                    <p class="text-slate-500 text-sm mt-3">— Maria Auxiliadora, mãe de utente de Terapia da Fala</p>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center text-white font-bold">M</div>
+                                    <div>
+                                        <h5 class="text-sm font-bold text-slate-800">Clínica Universitária Estatal</h5>
+                                        <p class="text-xs text-[#21A680]">Protocolo Académico Ativo</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ============================================ -->
+        <!-- 2. ÁREA EXCLUSIVA DO PACIENTE / UTENTE       -->
+        <!-- ============================================ -->
+        <section id="section-patient" class="hidden py-10 px-4 max-w-7xl mx-auto">
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- PERFIL E NOVO PEDIDO -->
+                <div class="lg:col-span-1 space-y-6">
+                    <!-- CARTÃO DE PERFIL -->
+                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-16 h-16 bg-[#105773] text-white rounded-full flex items-center justify-center text-2xl font-bold">
+                                👤
+                            </div>
+                            <div>
+                                <span class="text-xs font-semibold text-[#0B8C7F] uppercase tracking-wider">Utente Registado</span>
+                                <h3 id="patient-name-badge" class="font-title text-xl font-bold text-slate-800">Nome do Utente</h3>
+                                <p id="patient-email-badge" class="text-xs text-slate-500">utente@email.com</p>
+                            </div>
+                        </div>
+                        <div class="border-t border-slate-100 pt-4 space-y-3">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-slate-500">Rendimento Mensal:</span>
+                                <span id="patient-income-badge" class="font-bold text-slate-700">R$ 1.500,00</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-slate-500">Contacto:</span>
+                                <span id="patient-phone-badge" class="font-bold text-slate-700">(00) 00000-0000</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FORMULÁRIO DE PEDIDO DE CONSULTA -->
+                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+                        <h3 class="font-title text-lg font-bold text-[#105773] mb-4 flex items-center gap-2">
+                            <span>📝</span> Pedir Nova Consulta
+                        </h3>
+                        <form id="form-appointment-request" onsubmit="handleAppointmentSubmit(event)" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Área Necessária</label>
+                                <select id="req-specialty" required class="w-full bg-[#F2F2F2] border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F] text-sm">
+                                    <option value="" disabled selected>Escolha a área clínica...</option>
+                                    <option value="Medicina Dentária">Medicina Dentária</option>
+                                    <option value="Psicologia">Psicologia</option>
+                                    <option value="Fisioterapia">Fisioterapia</option>
+                                    <option value="Terapia da Fala">Terapia da Fala</option>
+                                    <option value="Nutrição">Nutrição</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Explique brevemente o seu caso</label>
+                                <textarea id="req-description" required rows="4" placeholder="Ex: Sinto dores musculares constantes nas costas há 3 semanas e preciso de acompanhamento postural..." class="w-full bg-[#F2F2F2] border border-slate-200 rounded-xl p-4 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F] text-sm resize-none"></textarea>
+                            </div>
+
+                            <button type="submit" class="w-full bg-[#0B8C7F] hover:bg-[#21A680] text-white font-bold py-3 px-6 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+                                Enviar Pedido Gratuito
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- CONSULTAS E MÉDICOS PARCEIROS -->
+                <div class="lg:col-span-2 space-y-6">
+                    <!-- CONSULTAS SOLICITADAS -->
+                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="font-title text-xl font-bold text-[#105773]">Os Meus Pedidos de Consulta</h3>
+                            <span class="text-xs bg-slate-100 text-slate-600 font-bold px-3 py-1.5 rounded-full" id="patient-total-requests">0 no total</span>
+                        </div>
+                        <div id="patient-appointments-list" class="space-y-4">
+                            <!-- Injetado dinamicamente -->
+                        </div>
+                    </div>
+
+                    <!-- PESQUISA DE CORPO CLÍNICO -->
+                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                            <h3 class="font-title text-xl font-bold text-[#105773]">Residentes e Médicos Parceiros</h3>
+                            <div class="flex gap-2">
+                                <select id="search-specialty-filter" onchange="filterDoctors()" class="bg-[#F2F2F2] border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none text-slate-700">
+                                    <option value="">Todas as Áreas</option>
+                                    <option value="Medicina Dentária">Medicina Dentária</option>
+                                    <option value="Psicologia">Psicologia</option>
+                                    <option value="Fisioterapia">Fisioterapia</option>
+                                    <option value="Terapia da Fala">Terapia da Fala</option>
+                                    <option value="Nutrição">Nutrição</option>
+                                </select>
+                                <input type="text" id="search-university-input" onkeyup="filterDoctors()" placeholder="Filtrar por Universidade..." class="bg-[#F2F2F2] border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none text-slate-700">
+                            </div>
+                        </div>
+
+                        <div id="doctors-list" class="grid sm:grid-cols-2 gap-4">
+                            <!-- Injetado dinamicamente -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ============================================ -->
+        <!-- 3. ÁREA EXCLUSIVA DO PROFISSIONAL / DOUTOR   -->
+        <!-- ============================================ -->
+        <section id="section-doctor" class="hidden py-10 px-4 max-w-7xl mx-auto">
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- PERFIL DO CLÍNICO -->
+                <div class="lg:col-span-1 space-y-6">
+                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-16 h-16 bg-[#0B8C7F] text-white rounded-full flex items-center justify-center text-2xl font-bold">
+                                👨‍⚕️
+                            </div>
+                            <div>
+                                <span class="text-xs font-semibold text-[#4BBF73] uppercase tracking-wider">Doutor / Pós-Graduando</span>
+                                <h3 id="doctor-name-badge" class="font-title text-xl font-bold text-slate-800">Dr. Nome Completo</h3>
+                                <p id="doctor-specialty-badge" class="text-xs text-slate-500 font-semibold uppercase bg-teal-50 text-teal-800 px-2 py-0.5 rounded-md inline-block mt-1">Medicina Dentária</p>
+                            </div>
+                        </div>
+                        <div class="border-t border-slate-100 pt-4 space-y-3">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-slate-500">Registo de Ordem:</span>
+                                <span id="doctor-register-badge" class="font-bold text-slate-700">CÉD-123456</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-slate-500">Universidade:</span>
+                                <span id="doctor-university-badge" class="font-bold text-slate-700">Faculdade Pública</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AGENDA ATIVA -->
+                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-title text-lg font-bold text-[#105773] flex items-center gap-2">
+                                📅 A Minha Agenda Ativa
+                            </h3>
+                            <span class="text-xs bg-emerald-50 text-emerald-800 px-2 py-1 rounded font-bold" id="doctor-agenda-count">0 Confirmados</span>
+                        </div>
+                        <div id="doctor-confirmed-appointments" class="space-y-3">
+                            <!-- Injetado dinamicamente -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PEDIDOS ENVIADOS PELOS UTENTES -->
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+                        <div class="flex items-center justify-between mb-6">
+                            <div>
+                                <h3 class="font-title text-xl font-bold text-[#105773]">Casos Disponíveis</h3>
+                                <p class="text-xs text-slate-500 mt-1">Lista filtrada apenas para casos da sua especialidade de atuação.</p>
+                            </div>
+                            <span class="text-xs bg-amber-100 text-amber-800 font-bold px-3 py-1.5 rounded-full" id="doctor-pending-count">0 pendentes</span>
+                        </div>
+
+                        <div id="doctor-pending-requests-list" class="space-y-4">
+                            <!-- Injetado dinamicamente -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- RODAPÉ -->
+    <footer class="bg-slate-900 text-slate-400 py-12 px-4 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-8">
+            <div class="md:col-span-2 space-y-4">
+                <div class="flex items-center gap-2">
+                    <span class="font-title text-2xl font-extrabold tracking-tight text-white">More<span class="text-[#4BBF73]">Life</span></span>
+                </div>
+                <p class="text-sm text-slate-400">
+                    A MoreLife é uma associação humanitária sem fins lucrativos que desenvolve conexões seguras e ágeis para unir o ambiente clínico académico e famílias em situação social desfavorecida. Todos os atos clínicos são gratuitos e realizados sob supervisão docente direta.
+                </p>
+                <p class="text-xs text-slate-500">© 2026 MoreLife Health & Wellness. Todos os direitos reservados.</p>
+            </div>
+            
+            <div>
+                <h4 class="font-title text-sm font-bold text-white uppercase tracking-wider mb-4">A Plataforma</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" onclick="scrollToSection('como-funciona')" class="hover:text-white transition-colors">Como Funciona</a></li>
+                    <li><a href="#" onclick="scrollToSection('especialidades')" class="hover:text-white transition-colors">Especialidades</a></li>
+                    <li><a href="#" onclick="scrollToSection('sobre')" class="hover:text-white transition-colors">Quem Somos</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-title text-sm font-bold text-white uppercase tracking-wider mb-4">Contacto & Apoio</h4>
+                <p class="text-sm">Ficou com alguma dúvida sobre o funcionamento das consultas?</p>
+                <div class="mt-4 pt-2">
+                    <a href="mailto:suporte@morelife.org" class="text-xs bg-slate-800 hover:bg-slate-700 text-white px-3 py-2 rounded-lg transition-all">suporte@morelife.org</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============================================ -->
+    <!-- DIÁLOGOS E MODAIS DA INTERFACE               -->
+    <!-- ============================================ -->
+
+    <!-- MODAL DE LOGIN / REGISTO -->
+    <div id="auth-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-white w-full max-w-xl rounded-3xl overflow-hidden shadow-2xl border border-slate-100 transform scale-95 transition-all">
+            <!-- Header -->
+            <div class="bg-[#105773] text-white p-6 relative">
+                <button onclick="closeAuthModal()" class="absolute top-6 right-6 text-white/80 hover:text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+                <h3 class="font-title text-2xl font-bold flex items-center gap-2">
+                    <span id="modal-title-icon">🔑</span> <span id="modal-title-text">Entrar na Plataforma</span>
+                </h3>
+                <p class="text-teal-100 text-sm mt-1" id="modal-subtitle-text">Bem-vindo(a) à MoreLife</p>
+            </div>
+
+            <!-- Abas Dinâmicas -->
+            <div class="flex border-b border-slate-100" id="modal-tab-container">
+                <button onclick="switchAuthTab('login')" id="tab-login" class="flex-1 py-4 text-center font-semibold text-sm border-b-2 border-[#105773] text-[#105773]">
+                    Iniciar Sessão (Entrar)
+                </button>
+                <button onclick="switchAuthTab('register')" id="tab-register" class="flex-1 py-4 text-center font-semibold text-sm text-slate-500 hover:text-slate-700 border-b-2 border-transparent">
+                    Criar Nova Conta
+                </button>
+            </div>
+
+            <div class="p-6 md:p-8">
+                <!-- FORMULÁRIO DE LOGIN -->
+                <form id="form-login" onsubmit="handleLogin(event)" class="space-y-4 block">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">E-mail de Acesso</label>
+                        <input type="email" id="login-email" required placeholder="ex: o-seu-email@provedor.com" class="w-full bg-[#F2F2F2] border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#105773] text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Palavra-passe</label>
+                        <input type="password" id="login-password" required placeholder="Introduza a sua palavra-passe" class="w-full bg-[#F2F2F2] border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#105773] text-sm">
+                    </div>
+                    <button type="submit" class="w-full bg-[#105773] hover:bg-[#0B8C7F] text-white font-bold py-3.5 px-6 rounded-xl transition-all shadow-md mt-2 flex items-center justify-center">
+                        Iniciar Sessão
+                    </button>
+                    <!-- Contas de Demonstração -->
+                    <div class="bg-teal-50 border border-teal-100 p-3 rounded-lg text-xs text-teal-800 text-center mt-4">
+                        💡 <strong>Utilizadores de Teste:</strong> Utente: <code class="bg-white px-1">p@ml.com</code> | Clínico: <code class="bg-white px-1">d@ml.com</code> (Palavra-passe: <code class="bg-white px-1">123</code>)
+                    </div>
+                </form>
+
+                <!-- FORMULÁRIO DE REGISTO -->
+                <form id="form-register" onsubmit="handleRegister(event)" class="space-y-4 hidden">
+                    <!-- Escolha de Perfil -->
+                    <div class="mb-4">
+                        <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 text-center">Que tipo de perfil quer registar?</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <label class="relative flex items-center justify-center gap-2 p-3 rounded-xl border border-slate-200 bg-[#F2F2F2] cursor-pointer hover:border-[#105773] [&:has(input:checked)]:bg-[#105773] [&:has(input:checked)]:text-white [&:has(input:checked)]:border-[#105773] transition-all">
+                                <input type="radio" name="reg-role" value="patient" checked onchange="toggleRegisterFormFields('patient')" class="sr-only">
+                                <span class="text-sm font-semibold">Utente Social</span>
+                            </label>
+                            <label class="relative flex items-center justify-center gap-2 p-3 rounded-xl border border-slate-200 bg-[#F2F2F2] cursor-pointer hover:border-[#0B8C7F] [&:has(input:checked)]:bg-[#0B8C7F] [&:has(input:checked)]:text-white [&:has(input:checked)]:border-[#0B8C7F] transition-all">
+                                <input type="radio" name="reg-role" value="doctor" onchange="toggleRegisterFormFields('doctor')" class="sr-only">
+                                <span class="text-sm font-semibold">Doutor / Residente</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Dados Básicos -->
+                    <div class="grid sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Nome Completo</label>
+                            <input type="text" id="reg-name" required placeholder="Como se chama" class="w-full bg-[#F2F2F2] border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#105773] text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">E-mail Principal</label>
+                            <input type="email" id="reg-email" required placeholder="nome@exemplo.com" class="w-full bg-[#F2F2F2] border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#105773] text-sm">
+                        </div>
+                    </div>
+
+                    <!-- Campos de Utente -->
+                    <div id="patient-only-fields" class="grid sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">NIF / Identificação do Utente</label>
+                            <input type="text" id="reg-cpf" placeholder="000 000 000" class="w-full bg-[#F2F2F2] border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#105773] text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Telemóvel / WhatsApp</label>
+                            <input type="text" id="reg-phone" placeholder="912 345 678" class="w-full bg-[#F2F2F2] border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#105773] text-sm">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Rendimento Mensal Estimado do Agregado (€)</label>
+                            <input type="number" id="reg-income" placeholder="Ex: 820" class="w-full bg-[#F2F2F2] border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#105773] text-sm">
+                        </div>
+                    </div>
+
+                    <!-- Campos de Clínico -->
+                    <div id="doctor-only-fields" class="grid sm:grid-cols-2 gap-4 hidden">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Nº de Registo Profissional / Ordem</label>
+                            <input type="text" id="reg-professional-id" placeholder="Ex: CÉD-12345" class="w-full bg-[#F2F2F2] border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F] text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Faculdade / Universidade</label>
+                            <input type="text" id="reg-university" placeholder="Ex: Univ. de Lisboa, Univ. do Porto" class="w-full bg-[#F2F2F2] border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F] text-sm">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Especialidade Principal</label>
+                            <select id="reg-specialty" class="w-full bg-[#F2F2F2] border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F] text-sm">
+                                <option value="Medicina Dentária">Medicina Dentária</option>
+                                <option value="Psicologia">Psicologia</option>
+                                <option value="Fisioterapia">Fisioterapia</option>
+                                <option value="Terapia da Fala">Terapia da Fala</option>
+                                <option value="Nutrição">Nutrição</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Palavra-passe -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Palavra-passe de Acesso</label>
+                        <input type="password" id="reg-password" required placeholder="Mínimo 4 caracteres" class="w-full bg-[#F2F2F2] border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#105773] text-sm">
+                    </div>
+
+                    <button type="submit" class="w-full bg-[#0B8C7F] hover:bg-[#21A680] text-white font-bold py-3.5 px-6 rounded-xl transition-all shadow-md mt-2 flex items-center justify-center">
+                        Registar Conta
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- MODAL DE AGENDAMENTO (PREENCHIDO PELO CLÍNICO) -->
+    <div id="approve-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-3xl overflow-hidden shadow-2xl border border-slate-100 transform scale-95 transition-all">
+            <div class="bg-[#21A680] text-white p-6 relative">
+                <button onclick="closeApproveModal()" class="absolute top-6 right-6 text-white/80 hover:text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+                <h3 class="font-title text-xl font-bold flex items-center gap-2">
+                    📅 Marcar e Confirmar Consulta
+                </h3>
+                <p class="text-teal-50 text-xs mt-1">Insira os dados clínicos para avisar o utente.</p>
+            </div>
+
+            <form id="form-approve-appointment" onsubmit="handleApproveSubmit(event)" class="p-6 space-y-4">
+                <input type="hidden" id="approve-appointment-id">
+                
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Data da Consulta</label>
+                    <input type="date" id="approve-date" required class="w-full bg-[#F2F2F2] border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#21A680] text-sm">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Hora da Consulta</label>
+                    <input type="time" id="approve-time" required class="w-full bg-[#F2F2F2] border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#21A680] text-sm">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Instalações Clínicas / Gabinete</label>
+                    <input type="text" id="approve-location" required placeholder="Ex: Gabinete 3, Clínica de Medicina Dentária, Bloco C" class="w-full bg-[#F2F2F2] border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#21A680] text-sm">
+                </div>
+
+                <div class="pt-2 flex gap-3">
+                    <button type="button" onclick="closeApproveModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-3 rounded-xl text-sm transition-all">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="flex-1 bg-[#21A680] hover:bg-[#1f9372] text-white font-bold py-3 rounded-xl text-sm transition-all shadow-md">
+                        Agendar Consulta
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- ============================================ -->
+    <!-- SCRIPT DE LÓGICA E CONTROLO DE DADOS         -->
+    <!-- ============================================ -->
+    <script>
+        // ============================================
+        // 1. BASE DE DADOS SIMULADA (LOCALSTORAGE)
+        // ============================================
+        const MOCK_DATA_KEY = 'MORELIFE_MOCK_DATABASE';
+
+        const defaultDatabase = {
+            users: [
+                {
+                    id: "u-patient-test",
+                    name: "Maria da Silva Silveira",
+                    email: "p@ml.com",
+                    password: "123",
+                    role: "patient",
+                    cpf: "501 234 567",
+                    phone: "912 345 678",
+                    income: "850"
+                },
+                {
+                    id: "u-doc-1",
+                    name: "Dr. Roberto de Souza",
+                    email: "d@ml.com",
+                    password: "123",
+                    role: "doctor",
+                    professionalId: "CÉD-88921",
+                    university: "Faculdade de Medicina Dentária (FMDUL)",
+                    specialty: "Medicina Dentária"
+                },
+                {
+                    id: "u-doc-2",
+                    name: "Dra. Flávia Albuquerque",
+                    email: "flavia@ml.com",
+                    password: "123",
+                    role: "doctor",
+                    professionalId: "OP-44231",
+                    university: "Faculdade de Psicologia de Coimbra",
+                    specialty: "Psicologia"
+                },
+                {
+                    id: "u-doc-3",
+                    name: "Dr. Arthur Lima Mendes",
+                    email: "arthur@ml.com",
+                    password: "123",
+                    role: "doctor",
+                    professionalId: "CREF-55110",
+                    university: "Escola Superior de Saúde do Alcoitão",
+                    specialty: "Fisioterapia"
+                },
+                {
+                    id: "u-doc-4",
+                    name: "Dra. Camila Nogueira",
+                    email: "camila@ml.com",
+                    password: "123",
+                    role: "doctor",
+                    professionalId: "ON-99432",
+                    university: "Faculdade de Ciências da Nutrição do Porto",
+                    specialty: "Nutrição"
+                }
+            ],
+            appointments: [
+                {
+                    id: "ap-1",
+                    patientId: "u-patient-test",
+                    doctorId: "u-doc-1",
+                    specialty: "Medicina Dentária",
+                    description: "Preciso de uma consulta de urgência para tratamento de cárie. Sinto muitas dores ao mastigar alimentos frios e quentes.",
+                    status: "confirmed",
+                    date: "2026-06-05",
+                    time: "14:30",
+                    location: "Gabinete 4, Piso 1, Clínica Escola da Faculdade de Medicina Dentária"
+                },
+                {
+                    id: "ap-2",
+                    patientId: "u-patient-test",
+                    doctorId: null,
+                    specialty: "Psicologia",
+                    description: "Tenho tido episódios de ansiedade intensa antes dos exames escolares. Gostaria de falar com um terapeuta para aprender técnicas de relaxamento.",
+                    status: "pending",
+                    date: "",
+                    time: "",
+                    location: ""
+                }
+            ]
+        };
+
+        function getDatabase() {
+            let db = localStorage.getItem(MOCK_DATA_KEY);
+            if (!db) {
+                localStorage.setItem(MOCK_DATA_KEY, JSON.stringify(defaultDatabase));
+                return defaultDatabase;
+            }
+            return JSON.parse(db);
+        }
+
+        function saveDatabase(db) {
+            localStorage.setItem(MOCK_DATA_KEY, JSON.stringify(db));
+        }
+
+        // ============================================
+        // 2. CONTROLO DE SESSÃO DO UTILIZADOR
+        // ============================================
+        let currentUser = null;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedSession = sessionStorage.getItem('ML_ACTIVE_USER');
+            if (savedSession) {
+                currentUser = JSON.parse(savedSession);
+            }
+            updateImpactStats();
+            renderSystem();
+        });
+
+        function scrollToSection(id) {
+            goToHome();
+            setTimeout(() => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                }
+            }, 100);
+        }
+
+        // ============================================
+        // 3. TOASTS DE NOTIFICAÇÃO
+        // ============================================
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            let bgClass = 'bg-[#105773]';
+            if (type === 'error') bgClass = 'bg-rose-600';
+            if (type === 'success') bgClass = 'bg-[#4BBF73]';
+            if (type === 'warning') bgClass = 'bg-amber-500';
+
+            toast.className = `${bgClass} text-white text-sm font-semibold px-6 py-4 rounded-2xl shadow-xl transition-all transform translate-y-2 opacity-0 duration-300 flex items-center gap-3`;
+            toast.innerHTML = `
+                <span>${type === 'error' ? '❌' : type === 'success' ? '✅' : '⚠️'}</span>
+                <span>${message}</span>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('opacity-0', 'translate-y-2');
+            }, 50);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 4000);
+        }
+
+        function updateImpactStats() {
+            const db = getDatabase();
+            const totalConcluidas = db.appointments.filter(a => a.status === 'confirmed').length;
+            const totalDocs = db.users.filter(u => u.role === 'doctor').length;
+            
+            document.getElementById('stats-consultas').innerText = `${1420 + totalConcluidas}+`;
+            document.getElementById('stats-profissionais').innerText = `${280 + totalDocs}+`;
+        }
+
+        // ============================================
+        // 4. PROCESSAMENTO DE REGISTO E ACESSO
+        // ============================================
+        function openRegisterModal(preferredRole = 'patient') {
+            document.getElementById('auth-modal').classList.remove('hidden');
+            document.getElementById('auth-modal').classList.add('flex');
+            switchAuthTab('register');
+            
+            const radios = document.getElementsByName('reg-role');
+            for(let radio of radios) {
+                if(radio.value === preferredRole) {
+                    radio.checked = true;
+                }
+            }
+            toggleRegisterFormFields(preferredRole);
+        }
+
+        function openLoginModal() {
+            document.getElementById('auth-modal').classList.remove('hidden');
+            document.getElementById('auth-modal').classList.add('flex');
+            switchAuthTab('login');
+        }
+
+        function closeAuthModal() {
+            document.getElementById('auth-modal').classList.add('hidden');
+            document.getElementById('auth-modal').classList.remove('flex');
+        }
+
+        function switchAuthTab(tab) {
+            const tabLogin = document.getElementById('tab-login');
+            const tabRegister = document.getElementById('tab-register');
+            const formLogin = document.getElementById('form-login');
+            const formRegister = document.getElementById('form-register');
+
+            if (tab === 'login') {
+                tabLogin.className = "flex-1 py-4 text-center font-semibold text-sm border-b-2 border-[#105773] text-[#105773]";
+                tabRegister.className = "flex-1 py-4 text-center font-semibold text-sm text-slate-500 hover:text-slate-700 border-b-2 border-transparent";
+                formLogin.classList.remove('hidden');
+                formRegister.classList.add('hidden');
+                document.getElementById('modal-title-text').innerText = "Aceder à Plataforma";
+                document.getElementById('modal-title-icon').innerText = "🔑";
+                document.getElementById('modal-subtitle-text').innerText = "Bem-vindo(a) de volta à sua conta MoreLife.";
+            } else {
+                tabRegister.className = "flex-1 py-4 text-center font-semibold text-sm border-b-2 border-[#0B8C7F] text-[#0B8C7F]";
+                tabLogin.className = "flex-1 py-4 text-center font-semibold text-sm text-slate-500 hover:text-slate-700 border-b-2 border-transparent";
+                formRegister.classList.remove('hidden');
+                formLogin.classList.add('hidden');
+                document.getElementById('modal-title-text').innerText = "Crie a sua Conta de Apoio";
+                document.getElementById('modal-title-icon').innerText = "🩺";
+                document.getElementById('modal-subtitle-text').innerText = "Preencha os dados abaixo para se ligar à nossa rede.";
+            }
+        }
+
+        font_title_text_size_adjust = 1;
+
+        function toggleRegisterFormFields(role) {
+            const patientFields = document.getElementById('patient-only-fields');
+            const doctorFields = document.getElementById('doctor-only-fields');
+
+            if (role === 'patient') {
+                patientFields.classList.remove('hidden');
+                doctorFields.classList.add('hidden');
+                document.getElementById('reg-cpf').required = true;
+                document.getElementById('reg-phone').required = true;
+                document.getElementById('reg-income').required = true;
+                document.getElementById('reg-professional-id').required = false;
+                document.getElementById('reg-university').required = false;
+            } else {
+                patientFields.classList.add('hidden');
+                doctorFields.classList.remove('hidden');
+                document.getElementById('reg-professional-id').required = true;
+                document.getElementById('reg-university').required = true;
+                document.getElementById('reg-cpf').required = false;
+                document.getElementById('reg-phone').required = false;
+                document.getElementById('reg-income').required = false;
+            }
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            const db = getDatabase();
+
+            const name = document.getElementById('reg-name').value.trim();
+            const email = document.getElementById('reg-email').value.trim().toLowerCase();
+            const password = document.getElementById('reg-password').value;
+            const role = document.querySelector('input[name="reg-role"]:checked').value;
+
+            if (db.users.find(u => u.email === email)) {
+                showToast("Este endereço de e-mail já se encontra registado na plataforma.", "error");
+                return;
+            }
+
+            const newUser = {
+                id: 'u-' + Date.now(),
+                name,
+                email,
+                password,
+                role
+            };
+
+            if (role === 'patient') {
+                newUser.cpf = document.getElementById('reg-cpf').value;
+                newUser.phone = document.getElementById('reg-phone').value;
+                newUser.income = document.getElementById('reg-income').value;
+            } else {
+                newUser.professionalId = document.getElementById('reg-professional-id').value;
+                newUser.university = document.getElementById('reg-university').value;
+                newUser.specialty = document.getElementById('reg-specialty').value;
+            }
+
+            db.users.push(newUser);
+            saveDatabase(db);
+
+            showToast("A sua conta foi registada e ativada com sucesso!", "success");
+            
+            currentUser = newUser;
+            sessionStorage.setItem('ML_ACTIVE_USER', JSON.stringify(currentUser));
+            
+            closeAuthModal();
+            renderSystem();
+            updateImpactStats();
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const db = getDatabase();
+
+            const email = document.getElementById('login-email').value.trim().toLowerCase();
+            const password = document.getElementById('login-password').value;
+
+            const user = db.users.find(u => u.email === email && u.password === password);
+
+            if (!user) {
+                showToast("E-mail ou palavra-passe incorretos. Tente novamente.", "error");
+                return;
+            }
+
+            currentUser = user;
+            sessionStorage.setItem('ML_ACTIVE_USER', JSON.stringify(currentUser));
+            
+            showToast(`Bem-vindo, ${user.name}!`, "success");
+            closeAuthModal();
+            renderSystem();
+        }
+
+        function handleLogout() {
+            currentUser = null;
+            sessionStorage.removeItem('ML_ACTIVE_USER');
+            showToast("Sessão terminada com segurança.", "warning");
+            goToHome();
+        }
+
+        function goToHome() {
+            document.getElementById('section-landing').classList.remove('hidden');
+            document.getElementById('section-patient').classList.add('hidden');
+            document.getElementById('section-doctor').classList.add('hidden');
+            renderSystem();
+        }
+
+        // ============================================
+        // 5. ATUALIZAÇÃO DOS PAINÉIS
+        // ============================================
+        function renderSystem() {
+            const headerActions = document.getElementById('auth-header-actions');
+            const landingSection = document.getElementById('section-landing');
+            const patientSection = document.getElementById('section-patient');
+            const doctorSection = document.getElementById('section-doctor');
+
+            if (!currentUser) {
+                headerActions.innerHTML = `
+                    <button onclick="openLoginModal()" class="text-[#105773] hover:text-[#0B8C7F] font-bold px-4 py-2.5 rounded-xl transition-all text-sm">
+                        Entrar
+                    </button>
+                    <button onclick="openRegisterModal('patient')" class="bg-[#0B8C7F] hover:bg-[#21A680] text-white font-bold px-5 py-2.5 rounded-xl transition-all shadow-sm text-sm">
+                        Registar
+                    </button>
+                `;
+                landingSection.classList.remove('hidden');
+                patientSection.classList.add('hidden');
+                doctorSection.classList.add('hidden');
+                return;
+            }
+
+            let dashboardAction = '';
+            if (currentUser.role === 'patient') {
+                dashboardAction = `<button onclick="showPatientDashboard()" class="text-[#0B8C7F] hover:text-[#21A680] font-bold text-sm">Painel do Utente</button>`;
+            } else if (currentUser.role === 'doctor') {
+                dashboardAction = `<button onclick="showDoctorDashboard()" class="text-[#0B8C7F] hover:text-[#21A680] font-bold text-sm">Painel do Médico</button>`;
+            }
+
+            headerActions.innerHTML = `
+                <div class="flex items-center gap-4">
+                    <div class="hidden sm:flex flex-col text-right">
+                        <span class="text-xs text-slate-500 font-medium font-semibold">Olá, ${currentUser.name.split(' ')[0]}</span>
+                        ${dashboardAction}
+                    </div>
+                    <button onclick="handleLogout()" class="bg-rose-600 hover:bg-rose-700 text-white font-bold px-4 py-2 rounded-xl text-xs transition-all flex items-center gap-1.5 shadow-md">
+                        Sair
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" /></svg>
+                    </button>
+                </div>
+            `;
+
+            if (currentUser.role === 'patient') {
+                landingSection.classList.add('hidden');
+                patientSection.classList.remove('hidden');
+                doctorSection.classList.add('hidden');
+                renderPatientDashboard();
+            } else if (currentUser.role === 'doctor') {
+                landingSection.classList.add('hidden');
+                patientSection.classList.add('hidden');
+                doctorSection.classList.remove('hidden');
+                renderDoctorDashboard();
+            }
+        }
+
+        function showPatientDashboard() {
+            document.getElementById('section-landing').classList.add('hidden');
+            document.getElementById('section-patient').classList.remove('hidden');
+            document.getElementById('section-doctor').classList.add('hidden');
+            renderPatientDashboard();
+        }
+
+        font_title_text_size_adjust = 1;
+
+        function showDoctorDashboard() {
+            document.getElementById('section-landing').classList.add('hidden');
+            document.getElementById('section-patient').classList.add('hidden');
+            document.getElementById('section-doctor').classList.remove('hidden');
+            renderDoctorDashboard();
+        }
+
+        // ============================================
+        // 6. ÁREA DE UTENTE (PACIENTE)
+        // ============================================
+        function renderPatientDashboard() {
+            if (!currentUser || currentUser.role !== 'patient') return;
+
+            document.getElementById('patient-name-badge').innerText = currentUser.name;
+            document.getElementById('patient-email-badge').innerText = currentUser.email;
+            document.getElementById('patient-income-badge').innerText = `€ ${parseFloat(currentUser.income).toLocaleString('pt-PT', {minimumFractionDigits: 2})}`;
+            document.getElementById('patient-phone-badge').innerText = currentUser.phone;
+
+            const db = getDatabase();
+            const myAppointments = db.appointments.filter(ap => ap.patientId === currentUser.id);
+            document.getElementById('patient-total-requests').innerText = `${myAppointments.length} no total`;
+
+            const listContainer = document.getElementById('patient-appointments-list');
+            if (myAppointments.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="text-center py-10 bg-slate-50 border border-dashed border-slate-200 rounded-2xl">
+                        <span class="text-3xl block mb-2">🤷‍♂️</span>
+                        <p class="text-slate-500 font-medium text-sm">Ainda não realizou pedidos de consulta nesta conta.</p>
+                        <p class="text-xs text-slate-400 mt-1">Utilize o formulário lateral para marcar a sua primeira avaliação.</p>
+                    </div>
+                `;
+            } else {
+                listContainer.innerHTML = myAppointments.map(ap => {
+                    let statusClass = '';
+                    let statusText = '';
+                    let detailsHTML = '';
+                    let docInfo = '';
+
+                    if (ap.doctorId) {
+                        const doc = db.users.find(u => u.id === ap.doctorId);
+                        if (doc) {
+                            docInfo = `
+                                <div class="mt-3 pt-3 border-t border-slate-100 flex items-center gap-3">
+                                    <span class="text-lg">👨‍⚕️</span>
+                                    <div class="text-xs text-slate-600">
+                                        <p class="font-semibold text-slate-800">${doc.name} (${doc.professionalId})</p>
+                                        <p class="text-[10px] text-teal-700 font-medium">${doc.university}</p>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    }
+
+                    if (ap.status === 'pending') {
+                        statusClass = 'bg-amber-100 text-amber-800 border-amber-200';
+                        statusText = '⏳ Pedido Pendente de Avaliação';
+                        detailsHTML = `
+                            <p class="text-xs text-slate-500 mt-2">Os médicos da área de **${ap.specialty}** estão a analisar as informações para agendar a sua consulta.</p>
+                        `;
+                    } else if (ap.status === 'confirmed') {
+                        statusClass = 'bg-green-100 text-green-800 border-green-200';
+                        statusText = '✅ Consulta Confirmada';
+                        detailsHTML = `
+                            <div class="mt-3 bg-emerald-50/50 rounded-xl p-3 border border-emerald-100 space-y-1 text-xs">
+                                <p class="text-slate-700">📅 <strong>Data:</strong> ${formatDateBr(ap.date)} às ${ap.time}</p>
+                                <p class="text-slate-700">🏥 <strong>Gabinete / Instalações:</strong> ${ap.location}</p>
+                            </div>
+                        `;
+                    } else if (ap.status === 'rejected') {
+                        statusClass = 'bg-rose-100 text-rose-800 border-rose-200';
+                        statusText = '❌ Indisponível no Momento';
+                        detailsHTML = `
+                            <p class="text-xs text-slate-500 mt-2">De momento, as vagas estão preenchidas. Experimente submeter o pedido daqui a uns dias para novas triagens.</p>
+                        `;
+                    }
+
+                    return `
+                        <div class="bg-white border border-slate-150 rounded-2xl p-5 hover:shadow-sm transition-all">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-sm font-semibold text-slate-500">Ref: ${ap.id}</span>
+                                    <span class="px-2.5 py-1 text-xs font-bold rounded-full ${statusClass} border">${statusText}</span>
+                                </div>
+                                <span class="bg-[#105773] text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">${ap.specialty}</span>
+                            </div>
+                            <p class="text-sm text-slate-700 mt-3 font-medium bg-[#F2F2F2] p-3.5 rounded-xl border border-slate-100">
+                                "${ap.description}"
+                            </p>
+                            ${detailsHTML}
+                            ${docInfo}
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            filterDoctors();
+        }
+
+        function filterDoctors() {
+            const db = getDatabase();
+            const specFilter = document.getElementById('search-specialty-filter').value;
+            const univFilter = document.getElementById('search-university-input').value.toLowerCase().trim();
+
+            const docList = db.users.filter(u => {
+                if (u.role !== 'doctor') return false;
+                
+                const matchesSpec = specFilter === '' || u.specialty === specFilter;
+                const matchesUniv = univFilter === '' || u.university.toLowerCase().includes(univFilter);
+                
+                return matchesSpec && matchesUniv;
+            });
+
+            const docContainer = document.getElementById('doctors-list');
+            
+            if (docList.length === 0) {
+                docContainer.innerHTML = `
+                    <div class="col-span-2 text-center py-6 text-slate-400 text-xs">
+                        Nenhum profissional académico encontrado com os filtros selecionados.
+                    </div>
+                `;
+                return;
+            }
+
+            docContainer.innerHTML = docList.map(doc => {
+                return `
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/60 flex items-start gap-3">
+                        <div class="w-10 h-10 bg-[#0B8C7F]/10 text-[#0B8C7F] rounded-lg flex items-center justify-center text-lg font-bold flex-shrink-0">
+                            🩺
+                        </div>
+                        <div class="space-y-0.5">
+                            <h4 class="font-title text-sm font-bold text-slate-800 leading-tight">${doc.name}</h4>
+                            <p class="text-[10px] bg-teal-50 text-teal-800 px-1.5 py-0.5 rounded-md font-semibold inline-block uppercase tracking-wider">${doc.specialty}</p>
+                            <p class="text-xs text-slate-500 font-medium">${doc.university}</p>
+                            <p class="text-[9px] text-slate-400">Reg: ${doc.professionalId}</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function handleAppointmentSubmit(e) {
+            e.preventDefault();
+            if (!currentUser) return;
+
+            const specialty = document.getElementById('req-specialty').value;
+            const description = document.getElementById('req-description').value.trim();
+
+            const db = getDatabase();
+            
+            const newAppointment = {
+                id: 'ap-' + (db.appointments.length + 1),
+                patientId: currentUser.id,
+                doctorId: null,
+                specialty,
+                description,
+                status: "pending",
+                date: "",
+                time: "",
+                location: ""
+            };
+
+            db.appointments.push(newAppointment);
+            saveDatabase(db);
+
+            showToast("O seu pedido de consulta social foi registado com sucesso!", "success");
+            
+            document.getElementById('form-appointment-request').reset();
+            renderPatientDashboard();
+        }
+
+        // ============================================
+        // 7. ÁREA DE CLÍNICO (PROFISSIONAL)
+        // ============================================
+        function renderDoctorDashboard() {
+            if (!currentUser || currentUser.role !== 'doctor') return;
+
+            document.getElementById('doctor-name-badge').innerText = currentUser.name;
+            document.getElementById('doctor-specialty-badge').innerText = currentUser.specialty;
+            document.getElementById('doctor-register-badge').innerText = currentUser.professionalId;
+            document.getElementById('doctor-university-badge').innerText = currentUser.university;
+
+            const db = getDatabase();
+
+            const pendingRequests = db.appointments.filter(ap => ap.specialty === currentUser.specialty && ap.status === 'pending');
+            document.getElementById('doctor-pending-count').innerText = `${pendingRequests.length} pendentes`;
+
+            const pendingContainer = document.getElementById('doctor-pending-requests-list');
+
+            if (pendingRequests.length === 0) {
+                pendingContainer.innerHTML = `
+                    <div class="text-center py-12 bg-[#F2F2F2] rounded-2xl border border-slate-200">
+                        <span class="text-3xl block mb-2">🥳</span>
+                        <p class="text-slate-600 font-bold text-sm">Não há pedidos pendentes!</p>
+                        <p class="text-xs text-slate-400 mt-1">Todos os pedidos de utentes para a especialidade de **${currentUser.specialty}** já foram agendados ou triados.</p>
+                    </div>
+                `;
+            } else {
+                pendingContainer.innerHTML = pendingRequests.map(ap => {
+                    const patient = db.users.find(u => u.id === ap.patientId);
+                    const patientName = patient ? patient.name : 'Utente';
+                    const patientIncome = patient ? `€ ${parseFloat(patient.income).toLocaleString('pt-PT', {minimumFractionDigits: 2})}` : 'Não fornecido';
+                    const patientPhone = patient ? patient.phone : 'Não fornecido';
+
+                    return `
+                        <div class="bg-white border-2 border-dashed border-slate-200 rounded-2xl p-5 hover:border-[#21A680] transition-all">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+                                <div>
+                                    <span class="text-xs text-[#0B8C7F] font-bold uppercase tracking-wider block">Perfil Social do Utente</span>
+                                    <h4 class="font-title text-base font-bold text-slate-800">${patientName}</h4>
+                                </div>
+                                <div class="text-left sm:text-right">
+                                    <span class="text-xs text-rose-600 bg-rose-50 px-2 py-1 rounded font-bold border border-rose-100">
+                                        Rendimento do Agregado: ${patientIncome}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="my-4">
+                                <span class="text-xs text-slate-400 uppercase tracking-wider font-semibold block mb-1">Motivo do Pedido de Consulta:</span>
+                                <p class="text-sm text-slate-700 bg-slate-50 border border-slate-100 rounded-xl p-4 font-medium italic">
+                                    "${ap.description}"
+                                </p>
+                            </div>
+
+                            <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 pt-2 border-t border-slate-100">
+                                <div class="text-xs text-slate-400">
+                                    Ref: <span class="font-bold text-slate-500">${ap.id}</span> • Contacto: <span class="font-bold text-slate-600">${patientPhone}</span>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button onclick="rejectAppointment('${ap.id}')" class="px-4 py-2 text-xs bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold rounded-lg transition-all border border-rose-200">
+                                        Recusar Caso
+                                    </button>
+                                    <button onclick="openApproveModal('${ap.id}')" class="px-5 py-2 text-xs bg-[#21A680] hover:bg-[#1f9372] text-white font-bold rounded-lg transition-all shadow-sm">
+                                        Aceitar e Agendar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            const myAgenda = db.appointments.filter(ap => ap.doctorId === currentUser.id && ap.status === 'confirmed');
+            document.getElementById('doctor-agenda-count').innerText = `${myAgenda.length} Confirmados`;
+
+            const agendaContainer = document.getElementById('doctor-confirmed-appointments');
+
+            if (myAgenda.length === 0) {
+                agendaContainer.innerHTML = `
+                    <div class="text-center py-6 text-slate-400 text-xs">
+                        Não existem agendamentos na sua lista de trabalho.
+                    </div>
+                `;
+            } else {
+                agendaContainer.innerHTML = myAgenda.map(ap => {
+                    const patient = db.users.find(u => u.id === ap.patientId);
+                    const patientName = patient ? patient.name : 'Utente';
+
+                    return `
+                        <div class="bg-[#F2F2F2] p-4 rounded-xl border border-slate-200 text-xs space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="font-bold text-slate-800 text-sm block">${patientName}</span>
+                                <span class="text-[9px] text-emerald-800 bg-emerald-100 font-bold px-1.5 py-0.5 rounded">Confirmado</span>
+                            </div>
+                            <div class="space-y-1 text-slate-600">
+                                <p>📆 <strong>Data/Hora:</strong> ${formatDateBr(ap.date)} às ${ap.time}</p>
+                                <p>🏥 <strong>Gabinete:</strong> ${ap.location}</p>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        function rejectAppointment(id) {
+            const db = getDatabase();
+            const ap = db.appointments.find(a => a.id === id);
+            
+            if (ap) {
+                ap.status = 'rejected';
+                saveDatabase(db);
+                showToast("Pedido rejeitado. O utente será colocado em lista de espera.", "warning");
+                renderDoctorDashboard();
+            }
+        }
+
+        function openApproveModal(id) {
+            document.getElementById('approve-appointment-id').value = id;
+            document.getElementById('approve-modal').classList.remove('hidden');
+            document.getElementById('approve-modal').classList.add('flex');
+            
+            const todayStr = new Date().toISOString().split('T')[0];
+            document.getElementById('approve-date').min = todayStr;
+        }
+
+        function closeApproveModal() {
+            document.getElementById('approve-modal').classList.add('hidden');
+            document.getElementById('approve-modal').classList.remove('flex');
+            document.getElementById('form-approve-appointment').reset();
+        }
+
+        function handleApproveSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('approve-appointment-id').value;
+            const date = document.getElementById('approve-date').value;
+            const time = document.getElementById('approve-time').value;
+            const location = document.getElementById('approve-location').value.trim();
+
+            const db = getDatabase();
+            const ap = db.appointments.find(a => a.id === id);
+
+            if (ap) {
+                ap.status = 'confirmed';
+                ap.doctorId = currentUser.id;
+                ap.date = date;
+                ap.time = time;
+                ap.location = location;
+
+                saveDatabase(db);
+                showToast("Consulta registada e agendada com sucesso!", "success");
+                
+                closeApproveModal();
+                renderDoctorDashboard();
+                updateImpactStats();
+            }
+        }
+
+        // ============================================
+        // 8. FORMATAÇÃO DE DATAS
+        // ============================================
+        function formatDateBr(dateStr) {
+            if (!dateStr) return '';
+            const [year, month, day] = dateStr.split('-');
+            return `${day}/${month}/${year}`;
+        }
+    </script>
+</body>
+</html>
