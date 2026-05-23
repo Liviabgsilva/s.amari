@@ -115,8 +115,6 @@ function scrollToSection(id) {
         const element = document.getElementById(id);
         if (element) {
             element.scrollIntoView({ behavior: 'smooth' });
-            // fechar menu móvel ao navegar
-            const mobileNav = document.getElementById('mobile-nav'); if (mobileNav && !mobileNav.classList.contains('hidden')) mobileNav.classList.add('hidden');
         }
     }, 100);
 }
@@ -223,12 +221,7 @@ function switchAuthTab(tab) {
     }
 }
 
-// Toggle mobile nav visibility
-function toggleMobileNav() {
-    const mobileNav = document.getElementById('mobile-nav');
-    if (!mobileNav) return;
-    mobileNav.classList.toggle('hidden');
-}
+// (mobile nav removed)
 
 function toggleRegisterFormFields(role) {
     const patientFields = document.getElementById('patient-only-fields');
@@ -419,25 +412,7 @@ function handleLogout() {
     sessionStorage.removeItem('ML_ACTIVE_USER');
     showToast("Sessão terminada com segurança.", "warning");
     goToHome();
-        showToast("A sua conta foi registada com sucesso!", "success");
-
-        currentUser = newUser;
-        sessionStorage.setItem('ML_ACTIVE_USER', JSON.stringify(currentUser));
-
-        // Se estivermos na página dedicada de registo, redirecionar para a homepage
-        try {
-            if (window.location.pathname && window.location.pathname.includes('register.html')) {
-                // Dar tempo para o toast aparecer
-                setTimeout(() => { window.location.href = 'index.html'; }, 800);
-                return;
-            }
-        } catch (e) {}
-
-        const authModal = document.getElementById('auth-modal');
-        if (authModal) {
-            closeAuthModal();
-        }
-        try { renderSystem(); } catch (e) {}
+}
         try { updateImpactStats(); } catch (e) {}
 
 // ============================================
@@ -458,14 +433,6 @@ function renderSystem() {
                 Registar
             </button>
         `;
-        // também atualizar o menu móvel se existir
-        const mobileAuth = document.getElementById('mobile-auth-actions');
-        if (mobileAuth) {
-            mobileAuth.innerHTML = `
-                <button onclick="openLoginModal(); toggleMobileNav()" class="w-full text-left text-[#105773] hover:text-[#0B8C7F] font-bold py-2">Entrar</button>
-                <button onclick="openRegisterModal('patient'); toggleMobileNav()" class="w-full text-left bg-[#0B8C7F] hover:bg-[#21A680] text-white font-bold py-2 px-3 rounded-md mt-2">Registar</button>
-            `;
-        }
         landingSection.classList.remove('hidden');
         patientSection.classList.add('hidden');
         doctorSection.classList.add('hidden');
@@ -491,10 +458,7 @@ function renderSystem() {
             </button>
         </div>
     `;
-    const mobileAuth = document.getElementById('mobile-auth-actions');
-    if (mobileAuth) {
-        mobileAuth.innerHTML = headerActions.innerHTML;
-    }
+    // mobile nav removed; nothing to sync
 
     if (currentUser.role === 'patient') {
         landingSection.classList.add('hidden');
