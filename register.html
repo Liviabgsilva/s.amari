@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Registar - MoreLife</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="style.css" rel="stylesheet">
+</head>
+<body class="min-h-screen bg-[#f7fbfd]">
+    <header class="bg-[#f7fbfd] shadow-sm border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+            <a href="index.html" class="font-title text-xl font-extrabold text-[#105773]">MoreLife</a>
+            <a href="index.html" class="text-sm text-slate-600">Voltar</a>
+        </div>
+    </header>
+
+    <main class="max-w-2xl mx-auto p-6">
+        <div class="bg-white rounded-2xl p-6 shadow-md">
+            <h1 class="font-title text-2xl font-bold text-[#105773] mb-4">Criar Conta</h1>
+            <p class="text-sm text-slate-600 mb-4">Preencha os campos abaixo para criar a sua conta MoreLife.</p>
+
+            <!-- Reutiliza o mesmo formulário do modal -->
+            <form onsubmit="handleRegister(event)" class="space-y-4">
+                <div class="grid grid-cols-2 gap-3">
+                    <label class="cursor-pointer rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold flex items-center gap-2">
+                        <input type="radio" name="reg-role" value="patient" checked onchange="toggleRegisterFormFields('patient')" class="h-4 w-4 text-[#0B8C7F] border-slate-300" />
+                        Paciente
+                    </label>
+                    <label class="cursor-pointer rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold flex items-center gap-2">
+                        <input type="radio" name="reg-role" value="doctor" onchange="toggleRegisterFormFields('doctor')" class="h-4 w-4 text-[#0B8C7F] border-slate-300" />
+                        Médico / Residente
+                    </label>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-slate-600 mb-2">Nome Completo</label>
+                    <input id="reg-name" type="text" required placeholder="Ex.: Maria da Silva" class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F]" />
+                    <p id="reg-name-error" class="text-rose-600 text-xs mt-1 hidden"></p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-600 mb-2">E-mail</label>
+                        <input id="reg-email" type="email" required placeholder="nome@exemplo.com" class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F]" />
+                        <p id="reg-email-error" class="text-rose-600 text-xs mt-1 hidden"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-600 mb-2">Senha</label>
+                        <input id="reg-password" type="password" required placeholder="Mín. 8 caracteres" class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F]" />
+                        <div class="h-2 mt-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                            <div id="reg-password-strength" class="h-2 w-0 bg-amber-400 transition-all"></div>
+                        </div>
+                        <p id="reg-password-error" class="text-rose-600 text-xs mt-1 hidden"></p>
+                    </div>
+                </div>
+
+                <div id="patient-only-fields">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-600 mb-2">CPF</label>
+                            <input id="reg-cpf" type="text" class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F]" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-600 mb-2">Telefone</label>
+                            <input id="reg-phone" type="tel" class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F]" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-600 mb-2">Rendimento</label>
+                            <input id="reg-income" type="number" min="0" step="0.01" class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F]" />
+                        </div>
+                    </div>
+                </div>
+
+                <div id="doctor-only-fields" class="hidden">
+                    <div class="grid grid-cols-1 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-600 mb-2">N.º Profissional</label>
+                            <input id="reg-professional-id" type="text" class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F]" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-600 mb-2">Universidade</label>
+                            <input id="reg-university" type="text" class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F]" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-600 mb-2">Especialidade</label>
+                            <input id="reg-specialty" type="text" class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0B8C7F]" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-3">
+                    <input id="reg-terms" type="checkbox" class="mt-1 h-4 w-4 text-[#0B8C7F]" />
+                    <label for="reg-terms" class="text-xs text-slate-600">Li e concordo com os <a href="#" class="text-[#0B8C7F] underline">Termos de Utilização</a> e a <a href="#" class="text-[#0B8C7F] underline">Política de Privacidade</a>.</label>
+                </div>
+                <p id="reg-terms-error" class="text-rose-600 text-xs mt-1 hidden"></p>
+                <button id="reg-submit-btn" type="submit" class="w-full rounded-2xl bg-[#0B8C7F] text-white font-bold py-3 text-sm hover:bg-[#0C6F64]">Criar Conta</button>
+            </form>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
